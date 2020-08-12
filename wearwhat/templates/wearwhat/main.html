@@ -4,6 +4,21 @@
     {% if user.is_authenticated %}
         <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>
 
+
+        <section id="recommend">
+            <div class="recommend_imgs">
+                <!-- 추천 1 상의, 하의-->
+                <img src="https://via.placeholder.com/300">
+                <img src="https://via.placeholder.com/300">
+                <!-- 추천 2 상의, 하의-->
+                <img src="https://via.placeholder.com/300">
+                <img src="https://via.placeholder.com/300">
+            </div>
+            <!-- css display 이용해 선택 폼 접고 펼 수 있도록  -->
+            <button><a href="*">선택 변경</a></button>
+
+        </section>
+
     {% else %}
         <button><a href="{% url 'login' %}">login</a></button>
     {% endif %}

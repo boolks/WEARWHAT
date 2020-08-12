@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import UserDetail
 
-# Register your models here.
+# 사용자 목록
+admin.site.register(UserDetail)
