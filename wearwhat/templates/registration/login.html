@@ -17,6 +17,7 @@
         </table>
 
         <input type="submit" value="로그인" class="btn btn-primary btn-md"/>
+        <a href="{% url 'join' %}">회원가입</a>
         <input type="hidden" name="next" value="{{ next }}"/>
     </form>
 {% endblock %}
