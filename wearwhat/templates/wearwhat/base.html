@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>오늘뭐입지</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- 개발자 정의 CSS -->
+    <link rel="stylesheet" href="{% static 'css/wearwhat.css' %}">
+</head>
+<body>
+    <div class="page-header">
+{#        {% if user.is_authenticated %}#}
+{#            <a href="{% url 'post_new' %}" class="top-menu">#}
+{#                <span class="glyphicon glyphicon-plus"></span>#}
+{#            </a>#}
+{#            <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>#}
+{#        {% else %}#}
+{#            <a href="{% url 'login' %}" class="top-menu">#}
+{#                <span class="glyphicon glyphicon-lock"></span>#}
+{#            </a>#}
+{#        {% endif %}#}
+        <h1 class="main__title">오늘뭐입지</h1>
+    </div>
+
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
