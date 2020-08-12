@@ -3,5 +3,7 @@ from . import views
 
 urlpatterns = [
     # localhost:8000/
-    path('', views.style_recommend, name='style_recommend'),
+    path('', views.main_page, name='main_page'),
+    # localhost:8000/
+    # path('main/', views.style_recommend, name='style_recommend'),
 ]

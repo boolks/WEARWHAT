@@ -1,0 +1,11 @@
+{% extends 'wearwhat/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>
+
+    {% else %}
+        <button><a href="{% url 'login' %}">login</a></button>
+    {% endif %}
+
+{% endblock %}
