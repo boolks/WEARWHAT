@@ -1,0 +1,19 @@
+{% extends 'wearwhat/base.html' %}
+
+{% block content %}
+    {% if form.errors %}
+        <p>양식에 맞게 작성해주세요.</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'join' %}">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">가입하기ddddddddddd</button>
+    <button type="submit">가입하기ddddddddddd</button>
+
+    <button type="submit">가입하기ddddddddddd</button>
+
+    </form>
+{% endblock %}
