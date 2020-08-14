@@ -16,7 +16,7 @@ class SignUp(generic.CreateView):
 # 옷 추천 메인페이지
 def main_page(request):
     pass
-    top = Cloth.objects.all()
+    cloth = Cloth.objects.all()
     return render(request, 'wearwhat/main.html', {'cloth': cloth})
 
 

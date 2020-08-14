@@ -16,17 +16,23 @@
 {#            </div>#}
 
             <div class="recommend_imgs">
+                <!-- 상의 -->
                 {% for clo in cloth %}
                 <img src="{{ clo.img }}">
                 <p> {{ clo.id }} 이름 : {{ clo.title }} 색깔: {{ clo.color }}</p>
-            {% endfor %}
+                {% endfor %}
+                <!-- 하의 -->
+{#                {% for clo in cloth %}#}
+{#                <img src="{{ clo.img }}">#}
+{#                <p> {{ clo.id }} 이름 : {{ clo.title }} 색깔: {{ clo.color }}</p>#}
+{#                {% endfor %}#}
+                <!-- 신의 -->
+{#                {% for clo in cloth %}#}
+{#                <img src="{{ clo.img }}">#}
+{#                <p> {{ clo.id }} 이름 : {{ clo.title }} 색깔: {{ clo.color }}</p>#}
+{#                {% endfor %}#}
             </div>
 
-
-            {% for clo in cloth %}
-                <img src="{{ clo.img }}">
-                <p> {{ clo.id }} 이름 : {{ clo.title }} 색깔: {{ clo.color }}</p>
-            {% endfor %}
             <!-- css display 이용해 선택 폼 접고 펼 수 있도록  -->
             <button><a href="*">선택 변경</a></button>
 
