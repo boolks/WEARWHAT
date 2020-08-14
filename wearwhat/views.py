@@ -1,22 +1,22 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView
-from .forms import UserDetailForm
+from django.views import generic
+from django.urls import reverse_lazy
+
+from .forms import CustomUserCreationForm
+from .models import Cloth
+
+
+# 회원가입
+class SignUp(generic.CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
 
 
 # 옷 추천 메인페이지
 def main_page(request):
     pass
-    return render(request, 'wearwhat/main.html')
+    top = Cloth.objects.all()
+    return render(request, 'wearwhat/main.html', {'cloth': cloth})
 
 
-class UserCreateView(CreateView):
-    form_class = UserDetailForm
-    template_name = 'registration/signup.html'
-    success_url = '/'
-
-# @login_required
-# def style_recommend(request):
-#     pass
-#     return render(request, 'wearwhat/recommend.html.html')
-# Create your views here.

@@ -29,7 +29,7 @@ urlpatterns = [
     # 로그인
     path('accounts/login/', auth_views.LoginView.as_view(template_name="registration/login.html"), name="login"),
     # 회원가입
-    path('accounts/join/', views.UserCreateView.as_view(), name='join'),
+    path('accounts/join/', views.SignUp.as_view(), name='join'),
     # 로그아웃
     path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': None}, name='logout'),
 ]

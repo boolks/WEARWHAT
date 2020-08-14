@@ -6,14 +6,27 @@
 
 
         <section id="recommend">
+{#            <div class="recommend_imgs">#}
+{#                <!-- 추천 1 상의, 하의-->#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#                <!-- 추천 2 상의, 하의-->#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#            </div>#}
+
             <div class="recommend_imgs">
-                <!-- 추천 1 상의, 하의-->
-                <img src="https://via.placeholder.com/300">
-                <img src="https://via.placeholder.com/300">
-                <!-- 추천 2 상의, 하의-->
-                <img src="https://via.placeholder.com/300">
-                <img src="https://via.placeholder.com/300">
+                {% for clo in cloth %}
+                <img src="{{ clo.img }}">
+                <p> {{ clo.id }} 이름 : {{ clo.title }} 색깔: {{ clo.color }}</p>
+            {% endfor %}
             </div>
+
+
+            {% for clo in cloth %}
+                <img src="{{ clo.img }}">
+                <p> {{ clo.id }} 이름 : {{ clo.title }} 색깔: {{ clo.color }}</p>
+            {% endfor %}
             <!-- css display 이용해 선택 폼 접고 펼 수 있도록  -->
             <button><a href="*">선택 변경</a></button>
 
