@@ -29,16 +29,22 @@
                         {% for clo in top %}
                             <td>
                                 <img src="{{ clo.image }}" class="list__img">
-                                <a href="{% url 'top_like'  top_id=clo.id %}">
-                                    {% if user in clo.top_like_users.all %}
-                                        <a href="{% url 'top_like' top_id=clo.id %}"><i class="fas fa-heart"></i></a>
-                                    {% else %}
-                                        <a href="{% url 'top_like' top_id=clo.id %}"><i class="far fa-heart"></i></a>
-                                    {% endif %}
-                                </a>
+
+                                {% if user in clo.top_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" name="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" name="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+{#                                <a href="{% url 'top_like'  top_id=clo.id %}">#}
+{#                                    {% if user in clo.top_like_users.all %}#}
+{#                                        <a href="{% url 'top_like' top_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
+{#                                    {% else %}#}
+{#                                        <a href="{% url 'top_like' top_id=clo.id %}"><i class="far fa-heart"></i></a>#}
+{#                                    {% endif %}#}
+{#                                </a>#}
                                 <!--좋아요 갯수 카운트-->
-                                <p class="card-text">
-                                {{ clo.top_like_users.count }} 명이 좋아합니다.
+                                <p class="card-text" id="top_count-{{ clo.id }}">
+                                    {{ clo.top_like_users.count }} 명이 좋아합니다.
                                 </p>
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
@@ -55,16 +61,21 @@
                         {% for clo in bottom %}
                             <td>
                                 <img src="{{ clo.image }}" class="list__img">
-                                <a href="{% url 'under_like'  under_id=clo.id %}">
-                                    {% if user in clo.under_like_users.all %}
-                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="fas fa-heart"></i></a>
-                                    {% else %}
-                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="far fa-heart"></i></a>
-                                    {% endif %}
-                                </a>
+                                {% if user in clo.under_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" name="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" name="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+{#                                <a href="{% url 'under_like'  under_id=clo.id %}">#}
+{#                                    {% if user in clo.under_like_users.all %}#}
+{#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
+{#                                    {% else %}#}
+{#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="far fa-heart"></i></a>#}
+{#                                    {% endif %}#}
+{#                                </a>#}
                                 <!--좋아요 갯수 카운트-->
-                                <p class="card-text">
-                                {{ clo.under_like_users.count }} 명이 좋아합니다.
+                                <p class="card-text" id="under_count-{{ clo.id }}">
+                                    {{ clo.under_like_users.count }} 명이 좋아합니다.
                                 </p>
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
@@ -80,16 +91,21 @@
                         {% for clo in shoes %}
                             <td>
                                 <img src="{{ clo.image }}" class="list__img">
-                                <a href="{% url 'shoes_like'  shoes_id=clo.id %}">
-                                    {% if user in clo.shoes_like_users.all %}
-                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="fas fa-heart"></i></a>
-                                    {% else %}
-                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="far fa-heart"></i></a>
-                                    {% endif %}
-                                </a>
+                                {% if user in clo.shoes_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" name="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" name="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+{#                                <a href="{% url 'shoes_like'  shoes_id=clo.id %}">#}
+{#                                    {% if user in clo.shoes_like_users.all %}#}
+{#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
+{#                                    {% else %}#}
+{#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="far fa-heart"></i></a>#}
+{#                                    {% endif %}#}
+{#                                </a>#}
                                 <!--좋아요 갯수 카운트-->
-                                <p class="card-text">
-                                {{ clo.shoes_like_users.count }} 명이 좋아합니다.
+                                <p class="card-text" id="shoes_count-{{ clo.id }}">
+                                    {{ clo.shoes_like_users.count }} 명이 좋아합니다.
                                 </p>
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
@@ -100,7 +116,80 @@
                 </div>
             </div>
         </section>
+
     {% else %}
         <button><a href="{% url 'login' %}">login</a></button>
     {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    {#    상의 스크립트#}
+    <script type="text/javascript">
+        $('.top_like').click(function(){
+            var num = $(this).attr('name')
+            $.ajax({
+                type: "POST", // 데이터를 전송하는 방법을 지정한다.
+                url: "{% url 'top_like' %}", // 통신할 url을 지정한다.
+                data: {'top_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
+                    $("#top_count-"+num).html(response.like_count+" 명이 좋아합니다.");
+                    if (response.like_icon == true){
+                        $("#top_ico-"+num).attr('class', 'fas fa-heart');
+                    } else{
+                        $("#top_ico-"+num).attr('class', 'far fa-heart');
+                    }
+                },
+                error:function(request,status,error){
+                    alert('실패');
+                }
+            });
+        });
+    </script>
+
+    {#    하의 스크립트#}
+    <script type="text/javascript">
+        $('.under_like').click(function(){
+            var num = $(this).attr('name')
+            $.ajax({
+                type: "POST", // 데이터를 전송하는 방법을 지정한다.
+                url: "{% url 'under_like' %}", // 통신할 url을 지정한다.
+                data: {'under_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
+                    $("#under_count-"+num).html(response.like_count+" 명이 좋아합니다.");
+                    if (response.like_icon == true){
+                        $("#under_ico-"+num).attr('class', 'fas fa-heart');
+                    } else{
+                        $("#under_ico-"+num).attr('class', 'far fa-heart');
+                    }
+                },
+                error:function(request,status,error){
+                    alert('실패');
+                }
+            });
+        });
+    </script>
+
+    {#    신발 스크립트#}
+    <script type="text/javascript">
+        $('.shoes_like').click(function(){
+            var num = $(this).attr('name')
+            $.ajax({
+                type: "POST", // 데이터를 전송하는 방법을 지정한다.
+                url: "{% url 'shoes_like' %}", // 통신할 url을 지정한다.
+                data: {'shoes_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
+                    $("#shoes_count-"+num).html(response.like_count+" 명이 좋아합니다.");
+                    if (response.like_icon == true){
+                        $("#shoes_ico-"+num).attr('class', 'fas fa-heart');
+                    } else{
+                        $("#shoes_ico-"+num).attr('class', 'far fa-heart');
+                    }
+                },
+                error:function(request,status,error){
+                    alert('실패');
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

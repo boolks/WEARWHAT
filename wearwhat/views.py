@@ -65,6 +65,7 @@ class Main_page(View):
         # 리스트 뿌리기
         print('getTop: ', self.getTop)
         if not self.getTop or not self.getUnder or not self.getShoes:
+            print('없으면 뿌려야되지 않냐')
             self.get_random_Top(request)
             self.get_random_Under(request)
             self.get_random_Shoes(request)
@@ -82,6 +83,7 @@ class Main_page(View):
         # 폼 뿌리기
         # form = ChangeOptionForm()
         # return render(request, self.template_name, {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes, 'form': form})
+        print('클로즈탑', cloth_top)
         return render(request, self.template_name, {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes})
 
     # 요청받기
@@ -106,6 +108,7 @@ class Main_page(View):
 
     # 상의 랜덤출력 함수
     def get_random_Top(self, request):
+        print("뿌려")
         top_id_list = []
         current_user = request.user
 
@@ -124,6 +127,7 @@ class Main_page(View):
                 top_id_list.append(i)
             top_random = random.sample(top_id_list, 5)
             self.setTop = top_random
+        print('여기가 처음 getTop', self.getTop)
         return self.getTop
 
     # 하의 랜덤출력 함수
@@ -173,48 +177,48 @@ class Main_page(View):
 
 
 
-def top_like(request, top_id):
-    #top_id = request.POST.get('top', None)
-    print("반응 왔는지 안왔는지 확인")
+def top_like(request):
+    top_id = request.POST.get('top_id', None)
     like = get_object_or_404(Top, id=top_id)
 
     if request.user in like.top_like_users.all():
         like.top_like_users.remove(request.user)
-        print("상의 좋아요 있어서 뺌")
+        like_icon = False
     else:
         like.top_like_users.add(request.user)
-        print("상의 좋아요 없어서 넣었음")
-    # return render(request, 'wearwhat/main.html')
-    return redirect('main_page')
-    #context = {'like_count':like.top_like_users.count()}
-    #return HttpResponse(json.dumps(context), content_type="application/json")
+        like_icon = True
+
+    context = {'like_count':like.top_like_users.count(), 'like_icon':like_icon}
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 
-def under_like(request, under_id):
-    print("반응 왔는지 안왔는지 확인")
+def under_like(request):
+    under_id = request.POST.get('under_id', None)
     like = get_object_or_404(Under, id=under_id)
 
     if request.user in like.under_like_users.all():
         like.under_like_users.remove(request.user)
-        print("하의 좋아요 있어서 뺌")
+        like_icon = False
     else:
         like.under_like_users.add(request.user)
-        print("하의 좋아요 없어서 넣었음")
-    # return render(request, Main_page.template_name, {'top': Main_page.getTop})
-    return redirect('main_page')
+        like_icon = True
 
+    context = {'like_count':like.under_like_users.count(), 'like_icon':like_icon}
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
-def shoes_like(request, shoes_id):
-    print("반응 왔는지 안왔는지 확인")
+def shoes_like(request):
+    shoes_id = request.POST.get('shoes_id', None)
     like = get_object_or_404(Shoes, id=shoes_id)
 
     if request.user in like.shoes_like_users.all():
         like.shoes_like_users.remove(request.user)
+        like_icon = False
     else:
         like.shoes_like_users.add(request.user)
-    # return render(request, Main_page.template_name, {'top': Main_page.getTop})
-    return redirect('main_page')
+        like_icon = True
 
+    context = {'like_count':like.shoes_like_users.count(), 'like_icon':like_icon}
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 # 선호 스타일, 장소나 목적 선택하면 옷 리스트 다시 뿌려줌
 class SelectOptions(Main_page):
