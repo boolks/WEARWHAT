@@ -27,7 +27,7 @@ for url in url_list:  # 0: 상의, 1: 하의:, 2:스커트, 3:원피스, 4:신�
         link = urljoin(htp, tag_url)
         cloth_list.append(link)
     # 상세 페이지 get 요청
-    for index, cloth in enumerate(cloth_list, 1):  # 일단 5개만!
+    for index, cloth in enumerate(cloth_list[:10], 1):  # 일단 5개만!
         d_res = requests.get(cloth)
         d_html = d_res.text
         d_bs = BeautifulSoup(d_html, 'html.parser')
@@ -112,12 +112,12 @@ for url in url_list:  # 0: 상의, 1: 하의:, 2:스커트, 3:원피스, 4:신�
     # print('json file write 종료')
 
     # 1. connection 생성
-    conn = pymongo.MongoClient('192.168.0.6', 27017)
+    conn = pymongo.MongoClient('localhost', 27017)
     # conn = pymongo.MongoClient(host='localhost', port=27017)
     print(conn)
 
     # 2. database 생성
-    cloth_db = conn.cloth_db
+    cloth_db = conn.my_db
     col = 'clothes' + str(url)
 
     # 3. collection 생성
