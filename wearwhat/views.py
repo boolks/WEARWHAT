@@ -1,9 +1,18 @@
-from django.shortcuts import render
+from urllib.parse import urlparse
+
+from django.contrib.auth import get_user_model
+from django.http import HttpResponseForbidden, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy
+from django.views.generic.base import View
+from django.db.models import Q
 
-from .forms import CustomUserCreationForm
-from .models import Cloth
+from .forms import CustomUserCreationForm, ChangeOptionForm
+from .models import Top, Under, Shoes
+import random
+
+user = get_user_model()
 
 
 # 회원가입
@@ -14,9 +23,195 @@ class SignUp(generic.CreateView):
 
 
 # 옷 추천 메인페이지
-def main_page(request):
-    pass
-    cloth = Cloth.objects.all()
-    return render(request, 'wearwhat/main.html', {'cloth': cloth})
+class Main_page(View):
+    template_name = 'wearwhat/main.html'
+
+    def __init__(self):
+        self.top_list = []
+        self.under_list = []
+        self.shoes_list = []
+        self.cloth_top = []
+        self.cloth_under = []
+        self.cloth_shoes = []
+
+    @property
+    def getTop(self):
+        return self.top_list
+
+    @property
+    def getUnder(self):
+        return self.under_list
+
+    @property
+    def getShoes(self):
+        return self.shoes_list
+
+    @getTop.setter
+    def setTop(self, tops):
+        self.top_list = tops
+
+    @getUnder.setter
+    def setUnder(self, under):
+        self.under_list = under
+
+    @getShoes.setter
+    def setShoes(self, shoes):
+        self.shoes_list = shoes
+
+    # 화면 뿌리기
+    def get(self, request):
+        # 리스트 뿌리기
+        cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
+        cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
+        cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+
+        # 폼 뿌리기
+        # form = ChangeOptionForm()
+        # return render(request, self.template_name, {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes, 'form': form})
+        return render(request, self.template_name, {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes})
+
+    # 요청받기
+    def post(self, request, *args, **kwargs):
+        # 폼 뿌리기
+        # form = ChangeOptionForm()
+        # 선택 변경 폼
+        if request.method == 'POST':
+            form = ChangeOptionForm(request.POST)
+            # 폼 입력 후 처리 어떻게될지
+            if form.is_valid():
+                pass
+                # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
+                # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
+                # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+                # post = form.save(commit=False)
+                # return redirect('main_page', pk=post.pk)
+        else:
+            form = ChangeOptionForm()
+
+        return render(request, 'wearwhat/recommend_select.html', {'form': form})
+    # 상의 랜덤출력 함수
+    def get_random_Top(self, request):
+        rand_list = []
+        top_id_list = []
+
+        # 남성일 때 원피스빼고 받기
+        current_user = request.user
+
+        if current_user.is_authenticated:
+            gender = current_user.gender
+        else:
+            gender = 'F'
+
+        if gender == 'M':
+            # 회원의 성별이 남성인 경우 남성 옷만 뿌림
+            for i in Top.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
+                top_id_list.append(i)
+            top_random = random.sample(top_id_list, 5)
+        else:
+            # 회원의 성별이 여성인 경우 여성 옷만 뿌림
+            for i in Top.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
+                top_id_list.append(i)
+            top_random = random.sample(top_id_list, 5)
+        return top_random
+
+    # 하의 랜덤출력 함수
+    def get_random_Under(self, request):
+        under_id_list = []
+        current_user = request.user
+
+        print("유저 id : ", current_user.id)
+        if current_user.is_authenticated:
+            gender = current_user.gender
+        else:
+            gender = 'F'
+
+        if gender == 'M':
+            # 회원의 성별이 남성인 경우 남성 옷만 뿌림
+            for i in Under.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
+                under_id_list.append(i)
+            under_random = random.sample(under_id_list, 5)
+        else:
+            # 회원의 성별이 여성인 경우 여성 옷만 뿌림
+            for i in Under.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
+                under_id_list.append(i)
+            under_random = random.sample(under_id_list, 5)
+        return under_random
+
+    # 신발 랜덤출력 함수
+    def get_random_Shoes(self, request):
+        shoes_id_list = []
+        current_user = request.user
+
+        print("유저 id : ", current_user.id)
+        if current_user.is_authenticated:
+            gender = current_user.gender
+        else:
+            gender = 'F'
+
+        if gender == 'M':
+            # 회원의 성별이 남성인 경우 남성 옷만 뿌림
+            for i in Shoes.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
+                shoes_id_list.append(i)
+            shoes_random = random.sample(shoes_id_list, 5)
+        else:
+            # 회원의 성별이 여성인 경우 여성 옷만 뿌림
+            for i in Shoes.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
+                shoes_id_list.append(i)
+            shoes_random = random.sample(shoes_id_list, 5)
+        return shoes_random
 
 
+
+def top_like(request, top_id):
+    print("반응 왔는지 안왔는지 확인")
+    like = get_object_or_404(Top, id=top_id)
+
+    if request.user in like.top_like_users.all():
+        like.top_like_users.remove(request.user)
+        print("상의 좋아요 있어서 뺌")
+    else:
+        like.top_like_users.add(request.user)
+        print("상의 좋아요 없어서 넣었음")
+    # return render(request, Main_page.template_name, {'top': Main_page.getTop})
+    return redirect('main_page')
+
+
+def under_like(request, under_id):
+    print("반응 왔는지 안왔는지 확인")
+    like = get_object_or_404(Under, id=under_id)
+
+    if request.user in like.under_like_users.all():
+        like.under_like_users.remove(request.user)
+        print("하의 좋아요 있어서 뺌")
+    else:
+        like.under_like_users.add(request.user)
+        print("하의 좋아요 없어서 넣었음")
+    # return render(request, Main_page.template_name, {'top': Main_page.getTop})
+    return redirect('main_page')
+
+
+def shoes_like(request, shoes_id):
+    print("반응 왔는지 안왔는지 확인")
+    like = get_object_or_404(Shoes, id=shoes_id)
+
+    if request.user in like.shoes_like_users.all():
+        like.shoes_like_users.remove(request.user)
+    else:
+        like.shoes_like_users.add(request.user)
+    # return render(request, Main_page.template_name, {'top': Main_page.getTop})
+    return redirect('main_page')
+
+
+# 선호 스타일, 장소나 목적 선택하면 옷 리스트 다시 뿌려줌
+class SelectOptions(Main_page):
+    template_name = 'wearwhat/recommend_select.html'
+
+    def get(self, request):
+        super().get(request)
+        cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
+        cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
+        cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+
+        form = ChangeOptionForm()
+        return render(request, self.template_name,
+                      {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes, 'form': form})

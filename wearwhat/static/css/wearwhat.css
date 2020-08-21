@@ -4,3 +4,26 @@
 .main__title{
     text-align: center;
 }
+.img_container{
+    position: relative;
+}
+.list__img {
+    width: 250px;
+    margin: 3px;
+}
+.glyphicon{
+    font-size: 30px;
+}
+/*.like-btn{*/
+/*    display: inline-block;*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    background-image: url("/wearwhat/static/images/like_heart.png");*/
+/*    background-position: -100px -400px;*/
+/*    text-indent: -9999px;*/
+/*    overflow: hidden;*/
+/*    border: none;*/
+/*}*/
+.list__description {
+    /*display: block;*/
+}

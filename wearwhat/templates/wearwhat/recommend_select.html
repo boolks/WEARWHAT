@@ -1,11 +1,27 @@
 {% extends 'wearwhat/base.html' %}
 
 {% block content %}
+    <div class="option_change">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+        <input type="submit" value="OK">
+    </form>
+    </div>
     {% if user.is_authenticated %}
         <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>
 
+
         <section id="recommend">
-            <button><a href="{% url 'change_option' %}">선택 변경</a></button>
+{#            <div class="recommend_imgs">#}
+{#                <!-- 추천 1 상의, 하의-->#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#                <!-- 추천 2 상의, 하의-->#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#                <img src="https://via.placeholder.com/300">#}
+{#            </div>#}
+
             <div class="recommend">
                 <!-- 상의 -->
                 <div class="top_list">
@@ -84,9 +100,7 @@
                 </div>
             </div>
         </section>
-
     {% else %}
         <button><a href="{% url 'login' %}">login</a></button>
     {% endif %}
-
 {% endblock %}

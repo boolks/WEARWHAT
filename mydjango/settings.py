@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fontawesome_5',
     'wearwhat',
 ]
 
@@ -82,14 +83,30 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'cloth_db',  # DB명
+    #     'USER': 'python',  # 데이터베이스 계정
+    #     'PASSWORD': 'python',  # 계정 비밀번호
+    #     'HOST': '192.168.0.6',  # 데이테베이스 IP
+    #     'PORT': '3306',  # 데이터베이스 port
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cloth_db',  # DB명
+        'ENGINE': 'djongo',
+        'NAME': 'my_db',
         'USER': 'python',  # 데이터베이스 계정
         'PASSWORD': 'python',  # 계정 비밀번호
-        'HOST': 'localhost',  # 데이테베이스 IP
-        'PORT': '3306',  # 데이터베이스 port
+        'HOST': 'localhost',  # 데이테베이스 주소(IP)
+        'PORT': '27017',  # 데이터베이스 포트(보통은 27017)
     }
+    # 'default': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'cloth_db',
+    #     'USER': 'django',  # 데이터베이스 계정
+    #     'PASSWORD': 'django',  # 계정 비밀번호
+    #     'HOST': '192.168.0.6',  # 데이테베이스 주소(IP)
+    #     'PORT': '27017',  # 데이터베이스 포트(보통은 27017)
+    # }
 }
 
 
