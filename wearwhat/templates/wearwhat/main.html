@@ -15,9 +15,9 @@
                                 <img src="{{ clo.image }}" class="list__img">
 
                                 {% if user in clo.top_like_users.all %}
-                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" name="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                                 {% else %}
-                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" name="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
                                 {% endif %}
 {#                                <a href="{% url 'top_like'  top_id=clo.id %}">#}
 {#                                    {% if user in clo.top_like_users.all %}#}
@@ -40,15 +40,15 @@
                 </div>
 
                 <!-- 하의 -->
-                <div class="bottom_list">
+                <div class="under_list">
                     <table>
-                        {% for clo in bottom %}
+                        {% for clo in under %}
                             <td>
                                 <img src="{{ clo.image }}" class="list__img">
                                 {% if user in clo.under_like_users.all %}
-                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" name="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                                 {% else %}
-                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" name="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
                                 {% endif %}
 {#                                <a href="{% url 'under_like'  under_id=clo.id %}">#}
 {#                                    {% if user in clo.under_like_users.all %}#}
@@ -76,9 +76,9 @@
                             <td>
                                 <img src="{{ clo.image }}" class="list__img">
                                 {% if user in clo.shoes_like_users.all %}
-                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" name="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                                 {% else %}
-                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" name="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
                                 {% endif %}
 {#                                <a href="{% url 'shoes_like'  shoes_id=clo.id %}">#}
 {#                                    {% if user in clo.shoes_like_users.all %}#}
@@ -109,15 +109,15 @@
 
     {#    상의 스크립트#}
     <script type="text/javascript">
-        $('.top_like').click(function(){
-            var num = $(this).attr('name')
+        $('.top_like').click(function(){ // top_like 클래스의 click 이벤트(상의 버튼)
+            var num = $(this).attr('cid') // cid 속성이 가진 값을 받아와 num에 저장
             $.ajax({
                 type: "POST", // 데이터를 전송하는 방법을 지정한다.
                 url: "{% url 'top_like' %}", // 통신할 url을 지정한다.
-                data: {'top_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                data: {'top_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // views.py에 보낼 데이터
                 success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
-                    $("#top_count-"+num).html(response.like_count+" 명이 좋아합니다.");
-                    if (response.like_icon == true){
+                    $("#top_count-"+num).html(response.like_count+" 명이 좋아합니다."); // #top_count-cid인 id값의 텍스트를 바꿔줌(카운트값을 동적으로 변경)
+                    if (response.like_icon == true){ // 좋아요를 눌렀을 경우
                         $("#top_ico-"+num).attr('class', 'fas fa-heart');
                     } else{
                         $("#top_ico-"+num).attr('class', 'far fa-heart');
@@ -133,7 +133,7 @@
     {#    하의 스크립트#}
     <script type="text/javascript">
         $('.under_like').click(function(){
-            var num = $(this).attr('name')
+            var num = $(this).attr('cid')
             $.ajax({
                 type: "POST", // 데이터를 전송하는 방법을 지정한다.
                 url: "{% url 'under_like' %}", // 통신할 url을 지정한다.
@@ -156,7 +156,7 @@
     {#    신발 스크립트#}
     <script type="text/javascript">
         $('.shoes_like').click(function(){
-            var num = $(this).attr('name')
+            var num = $(this).attr('cid')
             $.ajax({
                 type: "POST", // 데이터를 전송하는 방법을 지정한다.
                 url: "{% url 'shoes_like' %}", // 통신할 url을 지정한다.

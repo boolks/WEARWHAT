@@ -82,9 +82,9 @@ class Main_page(View):
 
         # 폼 뿌리기
         # form = ChangeOptionForm()
-        # return render(request, self.template_name, {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes, 'form': form})
+        # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
         print('클로즈탑', cloth_top)
-        return render(request, self.template_name, {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes})
+        return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
 
     # 요청받기
     def post(self, request, *args, **kwargs):
@@ -176,11 +176,13 @@ class Main_page(View):
         return self.getShoes
 
 
-
+# 상의 좋아요
 def top_like(request):
+    # html로 부터 top_id를 받아옴
     top_id = request.POST.get('top_id', None)
     like = get_object_or_404(Top, id=top_id)
 
+    # top_id에 해당하는 상의에 현재 유저가 좋아요를 이미 눌렀을 경우 제거
     if request.user in like.top_like_users.all():
         like.top_like_users.remove(request.user)
         like_icon = False
@@ -188,10 +190,12 @@ def top_like(request):
         like.top_like_users.add(request.user)
         like_icon = True
 
+    # 카운트 수와 좋아요의 여부를 key:value 형식(json) 으로 묶어 리턴
     context = {'like_count':like.top_like_users.count(), 'like_icon':like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+# 하의 좋아요
 def under_like(request):
     under_id = request.POST.get('under_id', None)
     like = get_object_or_404(Under, id=under_id)
@@ -206,6 +210,8 @@ def under_like(request):
     context = {'like_count':like.under_like_users.count(), 'like_icon':like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
+
+# 신발 좋아요
 def shoes_like(request):
     shoes_id = request.POST.get('shoes_id', None)
     like = get_object_or_404(Shoes, id=shoes_id)
@@ -232,4 +238,4 @@ class SelectOptions(Main_page):
 
         form = ChangeOptionForm()
         return render(request, self.template_name,
-                      {'top': cloth_top, 'bottom': cloth_under, 'shoes': cloth_shoes, 'form': form})
+                      {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
