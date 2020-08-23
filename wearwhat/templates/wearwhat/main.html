@@ -11,7 +11,7 @@
                 <div class="top_list">
                     <table>
                         {% for clo in top %}
-                            <td>
+                            <td id="fade-in-bottom">
                                 <img src="{{ clo.image }}" class="list__img">
 
                                 {% if user in clo.top_like_users.all %}
@@ -43,7 +43,7 @@
                 <div class="under_list">
                     <table>
                         {% for clo in under %}
-                            <td>
+                            <td id="fade-in-bottom">
                                 <img src="{{ clo.image }}" class="list__img">
                                 {% if user in clo.under_like_users.all %}
                                     <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
@@ -73,7 +73,7 @@
                 <div class="shoes_list">
                     <table>
                         {% for clo in shoes %}
-                            <td>
+                            <td id="fade-in-bottom">
                                 <img src="{{ clo.image }}" class="list__img">
                                 {% if user in clo.shoes_like_users.all %}
                                     <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
