@@ -75,29 +75,27 @@ class Main_page(View):
     def get(self, request):
         current_user = request.user
         if current_user.is_authenticated:
-            # 리스트 뿌리기
-            print('getTop: ', self.getTop)
-            if not self.getTop or not self.getUnder or not self.getShoes:
-                print('없으면 뿌려야되지 않냐')
-                self.get_random_Top(request)
-                self.get_random_Under(request)
-                self.get_random_Shoes(request)
-            else:
-                pass
-            # 리스트 뿌리기
-            cloth_top = Top.objects.filter(id__in=self.getTop)
-            cloth_under = Under.objects.filter(id__in=self.getUnder)
-            cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
+          # 리스트 뿌리기
+          print('getTop: ', self.getTop)
+          if not self.getTop or not self.getUnder or not self.getShoes:
+              self.get_random_Top(request)
+              self.get_random_Under(request)
+              self.get_random_Shoes(request)
+          else:
+              pass
+          # 리스트 뿌리기
+          cloth_top = Top.objects.filter(id__in=self.getTop)
+          cloth_under = Under.objects.filter(id__in=self.getUnder)
+          cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
 
-            # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
-            # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
-            # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+          # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
+          # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
+          # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
 
-            # 폼 뿌리기
-            # form = ChangeOptionForm()
-            # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
-            print('클로즈탑', cloth_top)
-            return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
+          # 폼 뿌리기
+          # form = ChangeOptionForm()
+          # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
+          return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
         else:
             return render(request, 'wearwhat/index.html')
 
@@ -123,7 +121,6 @@ class Main_page(View):
 
     # 상의 랜덤출력 함수
     def get_random_Top(self, request):
-        print("뿌려")
         top_id_list = []
         current_user = request.user
 
@@ -142,7 +139,6 @@ class Main_page(View):
                 top_id_list.append(i)
             top_random = random.sample(top_id_list, 5)
             self.setTop = top_random
-        print('여기가 처음 getTop', self.getTop)
         return self.getTop
 
     # 하의 랜덤출력 함수
