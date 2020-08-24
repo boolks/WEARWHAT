@@ -106,29 +106,28 @@
 
 </body>
 </html>
+<!-- {% extends "wearwhat/base.html" %}
 
-{#{% extends "wearwhat/base.html" %}#}
-{##}
-{#{% block content %}#}
-{##}
-{#    <!-- 로그인폼에서 에러가 발생하는 경우 -->#}
-{#    {% if form.errors %}#}
-{#        <p>이름과 비밀번호가 일치하지 않습니다. 다시 시도해주세요.</p>#}
-{#    {% endif %}#}
-{##}
-{#    <form method="post" action="{% url 'login' %}">#}
-{#        {% csrf_token %}#}
-{#        <table class="table table-bordered table-hover">#}
-{#            <tr>#}
-{#                <td>{{ form.username.label_tag }}</td><td>{{ form.username }}</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <td>{{ form.password.label_tag }}</td><td>{{ form.password }}</td>#}
-{#            </tr>#}
-{#        </table>#}
-{##}
-{#        <input type="submit" value="로그인" class="btn btn-primary btn-md"/>#}
-{#        <a href="{% url 'join' %}">회원가입</a>#}
-{#        <input type="hidden" name="next" value="{{ next }}"/>#}
-{#    </form>#}
-{#{% endblock %}#}
+{% block content %}
+
+    <!-- 로그인폼에서 에러가 발생하는 경우 -->
+<!--     {% if form.errors %}
+        <p>이름과 비밀번호가 일치하지 않습니다. 다시 시도해주세요.</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <tr>
+                <td>{{ form.username.label_tag }}</td><td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password.label_tag }}</td><td>{{ form.password }}</td>
+            </tr>
+        </table>
+
+        <input type="submit" value="로그인" class="btn btn-primary btn-md"/>
+        <a href="{% url 'join' %}">회원가입</a>
+        <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
+{% endblock %} --> -->

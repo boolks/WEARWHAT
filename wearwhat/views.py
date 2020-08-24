@@ -276,3 +276,8 @@ class SelectOptions(Main_page):
         form = ChangeOptionForm()
         return render(request, self.template_name,
                       {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
