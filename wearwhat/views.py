@@ -1,31 +1,37 @@
-from urllib.parse import urlparse
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.views.generic.base import View
 from django.db.models import Q
-import json
 from django.http import HttpResponse
+from django.db.models import Count
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
+
 import random
+import json
 
 user = get_user_model()
 
 
 def index_view(request):
+    # DB 옷 데이터 개수
+    top_count = Top.objects.all().aggregate(Count('id')).get('id__count')
+    under_count = Under.objects.all().aggregate(Count('id')).get('id__count')
+    shoes_count = Shoes.objects.all().aggregate(Count('id')).get('id__count')
+    cloth_count = top_count + under_count + shoes_count
+
+    # 로그인 전 => index 페이지 / 로그인 완료 => main 페이지
     current_user = request.user
     if current_user.is_authenticated:
         # return_url = reverse_lazy('main_page')
         return HttpResponseRedirect(reverse('main_page'))
     else:
         # return_url = reverse_lazy('index_page')
-        return render(request, 'wearwhat/index.html')
+        return render(request, 'wearwhat/index.html', {'cloth_count': cloth_count})
 
 
 # 회원가입
