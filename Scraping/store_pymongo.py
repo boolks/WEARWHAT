@@ -13,7 +13,7 @@ conn = pymongo.MongoClient(host='localhost', port=27017)
 print(conn)
 
 # 2. database 생성 !!!DB바꿔야함!!!
-cloth_db = conn.test90_db
+cloth_db = conn.cloth_db
 col = 'clothes_top'
 
 # 3. collection 생성
@@ -32,7 +32,7 @@ conn = pymongo.MongoClient(host='localhost', port=27017)
 print(conn)
 
 # 2. database 생성
-cloth_db = conn.test90_db
+cloth_db = conn.cloth_db
 col = 'clothes_under'
 
 # 3. collection 생성
@@ -51,7 +51,7 @@ conn = pymongo.MongoClient(host='localhost', port=27017)
 print(conn)
 
 # 2. database 생성
-cloth_db = conn.test90_db
+cloth_db = conn.cloth_db
 col = 'clothes_shoes'
 
 # 3. collection 생성
