@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.views.generic.base import View
 from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
+from django.contrib import auth
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
@@ -33,6 +34,24 @@ def index_view(request):
         # return_url = reverse_lazy('index_page')
         return render(request, 'wearwhat/index.html', {'cloth_count': cloth_count})
 
+#로그인
+def login(request):
+    if request.method == 'POST':
+        #post 요청이 들어온다면
+        # print('유저네임', request.POST['username'])
+        username = request.POST['username']
+        password = request.POST['pass']
+        user = auth.authenticate(request, username=username, password=password)
+        #입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
+        if user is not None:
+            #데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
+            auth.login(request, user)
+            return HttpResponseRedirect(reverse('main_page'))
+        else:
+            #회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
+            return render(request, 'registration/login.html', {'error': 'username or password is incorrect.'})
+    else:
+        return render(request, 'registration/login.html')
 
 # 회원가입
 class SignUp(generic.CreateView):

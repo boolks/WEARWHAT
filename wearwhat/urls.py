@@ -7,6 +7,7 @@ urlpatterns = [
     # localhost:8000/
     path('', views.index_view, name='index_page'),
     path('main', views.Main_page.as_view(), name='main_page'),
+    path('login', views.login, name='login'),
 
     # path('top/<int:top_id>', views.top_like, name='top_like'),
     # path('under/<int:under_id>', views.under_like, name='under_like'),
