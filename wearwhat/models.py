@@ -39,12 +39,14 @@ class Top(models.Model):
     category = models.TextField(blank=True, null=True)
     image = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
+    style = models.TextField(blank=True, null=True)
+    temperature = models.TextField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     top_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='top_like_users')
 
     class Meta:
         managed = False
-        db_table = 'clothes001'
+        db_table = 'clothes_top'
 
 
 # 옷 정보 - 하의
@@ -58,12 +60,14 @@ class Under(models.Model):
     category = models.TextField(blank=True, null=True)
     image = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
+    style = models.TextField(blank=True, null=True)
+    temperature = models.TextField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     under_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='under_like_users')
 
     class Meta:
         managed = False
-        db_table = 'clothes003'
+        db_table = 'clothes_under'
 
 
 # 옷 정보 - 신발
@@ -77,9 +81,11 @@ class Shoes(models.Model):
     category = models.TextField(blank=True, null=True)
     image = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
+    style = models.TextField(blank=True, null=True)
+    temperature = models.TextField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     shoes_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shoes_like_users')
 
     class Meta:
         managed = False
-        db_table = 'clothes005'
+        db_table = 'clothes_shoes'
