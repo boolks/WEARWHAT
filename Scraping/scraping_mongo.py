@@ -117,7 +117,7 @@ for url in url_list:  # 0: 상의, 1: 하의:, 2:스커트, 3:원피스, 4:신�
     print(conn)
 
     # 2. database 생성
-    cloth_db = conn.my_db
+    cloth_db = conn.cloth_db
     col = 'clothes' + str(url)
 
     # 3. collection 생성
