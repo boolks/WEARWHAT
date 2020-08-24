@@ -1,10 +1,11 @@
 from urllib.parse import urlparse
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.base import View
 from django.db.models import Q
 import json
@@ -15,6 +16,16 @@ from .models import Top, Under, Shoes
 import random
 
 user = get_user_model()
+
+
+def index_view(request):
+    current_user = request.user
+    if current_user.is_authenticated:
+        # return_url = reverse_lazy('main_page')
+        return HttpResponseRedirect(reverse('main_page'))
+    else:
+        # return_url = reverse_lazy('index_page')
+        return render(request, 'wearwhat/index.html')
 
 
 # 회원가입
@@ -62,27 +73,31 @@ class Main_page(View):
 
     # 화면 뿌리기
     def get(self, request):
-        # 리스트 뿌리기
-        print('getTop: ', self.getTop)
-        if not self.getTop or not self.getUnder or not self.getShoes:
-            self.get_random_Top(request)
-            self.get_random_Under(request)
-            self.get_random_Shoes(request)
+        current_user = request.user
+        if current_user.is_authenticated:
+          # 리스트 뿌리기
+          print('getTop: ', self.getTop)
+          if not self.getTop or not self.getUnder or not self.getShoes:
+              self.get_random_Top(request)
+              self.get_random_Under(request)
+              self.get_random_Shoes(request)
+          else:
+              pass
+          # 리스트 뿌리기
+          cloth_top = Top.objects.filter(id__in=self.getTop)
+          cloth_under = Under.objects.filter(id__in=self.getUnder)
+          cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
+
+          # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
+          # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
+          # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+
+          # 폼 뿌리기
+          # form = ChangeOptionForm()
+          # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
+          return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
         else:
-            pass
-        # 리스트 뿌리기
-        cloth_top = Top.objects.filter(id__in=self.getTop)
-        cloth_under = Under.objects.filter(id__in=self.getUnder)
-        cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
-
-        # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
-        # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
-        # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
-
-        # 폼 뿌리기
-        # form = ChangeOptionForm()
-        # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
-        return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
+            return render(request, 'wearwhat/index.html')
 
     # 요청받기
     def post(self, request, *args, **kwargs):
@@ -221,6 +236,7 @@ def shoes_like(request):
 
     context = {'like_count':like.shoes_like_users.count(), 'like_icon':like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
+
 
 # 선호 스타일, 장소나 목적 선택하면 옷 리스트 다시 뿌려줌
 class SelectOptions(Main_page):

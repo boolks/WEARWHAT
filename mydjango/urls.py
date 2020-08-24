@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.conf import settings
 
 from wearwhat import views
 
@@ -32,4 +33,5 @@ urlpatterns = [
     path('accounts/join/', views.SignUp.as_view(), name='join'),
     # 로그아웃
     path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': None}, name='logout'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': settings.LOGOUT_REDIRECT_URL}, name='logout'),
 ]
