@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.views.generic.base import View
 from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
+from django.contrib import auth
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
@@ -257,3 +258,8 @@ class SelectOptions(Main_page):
         form = ChangeOptionForm()
         return render(request, self.template_name,
                       {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
