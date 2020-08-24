@@ -34,8 +34,11 @@
     opacity: 1;
   }
 }
-
-
+.masthead{
+    background-image: url(../images/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
 .page-header{
 
 }
