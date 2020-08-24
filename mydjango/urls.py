@@ -32,6 +32,7 @@ urlpatterns = [
     # 회원가입
     path('accounts/join/', views.SignUp.as_view(), name='join'),
     # 로그아웃
-    path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': None}, name='logout'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    # path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': None}, name='logout'),
+    # path('accounts/logout/', auth_views.LogoutView.as_view(), {'next': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    path('accounts/logout', views.logout, name='logout')
 ]
