@@ -68,38 +68,6 @@ class SignUp(generic.CreateView):
 class Main_page(View):
     template_name = 'wearwhat/main.html'
 
-    def __init__(self):
-        self.top_list = []
-        self.under_list = []
-        self.shoes_list = []
-        self.cloth_top = []
-        self.cloth_under = []
-        self.cloth_shoes = []
-
-    @property
-    def getTop(self):
-        return self.top_list
-
-    @property
-    def getUnder(self):
-        return self.under_list
-
-    @property
-    def getShoes(self):
-        return self.shoes_list
-
-    @getTop.setter
-    def setTop(self, tops):
-        self.top_list = tops
-
-    @getUnder.setter
-    def setUnder(self, under):
-        self.under_list = under
-
-    @getShoes.setter
-    def setShoes(self, shoes):
-        self.shoes_list = shoes
-
     # 화면 뿌리기
     def get(self, request):
         current_user = request.user
@@ -111,28 +79,15 @@ class Main_page(View):
             temp = observation.weather.temperature('celsius').get('temp')
             # print('현재온도: ', temperature)
 
-            # 랜덤함수 이용
-            print('getTop: ', self.getTop)
-            if not self.getTop or not self.getUnder or not self.getShoes:
-                self.get_random_Top(request)
-                self.get_random_Under(request)
-                self.get_random_Shoes(request)
-            else:
-                pass
-
             # if temp >= 23:
             #     Top.objects.filter(Q(temperature=23) | Q(gender='남,여')).values_list('id', flat=True)
 
             # 리스트 뿌리기
-            cloth_top = Top.objects.filter(id__in=self.getTop)
-            cloth_under = Under.objects.filter(id__in=self.getUnder)
-            cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
+            cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+            cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+            cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
-            # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
-            # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
-            # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
-
-            return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temperature': temp})
+            return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp})
         else:
             return render(request, 'wearwhat/index.html')
 
@@ -156,71 +111,67 @@ class Main_page(View):
 
         return render(request, 'wearwhat/recommend_select.html', {'form': form})
 
-    # 상의 랜덤출력 함수
-    def get_random_Top(self, request):
-        top_id_list = []
-        current_user = request.user
 
-        if current_user.is_authenticated:
-            gender = current_user.gender
-        else:
-            gender = 'F'
+# 상의 랜덤출력 함수
+def get_random_Top(request):
+    top_id_list = []
+    current_user = request.user
 
-        if gender == 'M':
-            for i in Top.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
-                top_id_list.append(i)
-            top_random = random.sample(top_id_list, 5)
-            self.setTop = top_random
-        else:
-            for i in Top.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
-                top_id_list.append(i)
-            top_random = random.sample(top_id_list, 5)
-            self.setTop = top_random
-        return self.getTop
+    if current_user.is_authenticated:
+        gender = current_user.gender
+    else:
+        gender = 'F'
 
-    # 하의 랜덤출력 함수
-    def get_random_Under(self, request):
-        under_id_list = []
-        current_user = request.user
+    if gender == 'M':
+        for i in Top.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
+            top_id_list.append(i)
+        top_random = random.sample(top_id_list, 5)
+    else:
+        for i in Top.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+            top_id_list.append(i)
+        top_random = random.sample(top_id_list, 5)
+    return top_random
 
-        if current_user.is_authenticated:
-            gender = current_user.gender
-        else:
-            gender = 'F'
 
-        if gender == 'M':
-            for i in Under.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
-                under_id_list.append(i)
-            under_random = random.sample(under_id_list, 5)
-            self.setUnder = under_random
-        else:
-            for i in Under.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
-                under_id_list.append(i)
-            under_random = random.sample(under_id_list, 5)
-            self.setUnder = under_random
-        return self.getUnder
+# 하의 랜덤출력 함수
+def get_random_Under(request):
+    under_id_list = []
+    current_user = request.user
 
-    # 신발 랜덤출력 함수
-    def get_random_Shoes(self, request):
-        shoes_id_list = []
-        current_user = request.user
+    if current_user.is_authenticated:
+        gender = current_user.gender
+    else:
+        gender = 'F'
 
-        if current_user.is_authenticated:
-            gender = current_user.gender
-        else:
-            gender = 'F'
+    if gender == 'M':
+        for i in Under.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
+            under_id_list.append(i)
+        under_random = random.sample(under_id_list, 5)
+    else:
+        for i in Under.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+            under_id_list.append(i)
+        under_random = random.sample(under_id_list, 5)
+    return under_random
 
-        if gender == 'M':
-            for i in Shoes.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
-                shoes_id_list.append(i)
-            shoes_random = random.sample(shoes_id_list, 5)
-            self.setShoes = shoes_random
-        else:
-            for i in Shoes.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
-                shoes_id_list.append(i)
-            shoes_random = random.sample(shoes_id_list, 5)
-            self.setShoes = shoes_random
-        return self.getShoes
+# 신발 랜덤출력 함수
+def get_random_Shoes(request):
+    shoes_id_list = []
+    current_user = request.user
+
+    if current_user.is_authenticated:
+        gender = current_user.gender
+    else:
+        gender = 'F'
+
+    if gender == 'M':
+        for i in Shoes.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
+            shoes_id_list.append(i)
+        shoes_random = random.sample(shoes_id_list, 5)
+    else:
+        for i in Shoes.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+            shoes_id_list.append(i)
+        shoes_random = random.sample(shoes_id_list, 5)
+    return shoes_random
 
 
 # 상의 좋아요
@@ -280,13 +231,29 @@ class SelectOptions(Main_page):
 
     def get(self, request):
         super().get(request)
-        cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
-        cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
-        cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+        cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+        cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+        cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
         form = ChangeOptionForm()
         return render(request, self.template_name,
                       {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
+
+
+# 추천 받는 메소드 구현중 위에거랑 합치든 해야댐
+def recommend(request):
+    template_name = 'wearwhat/recommend_result.html'
+    if request.method == "POST":
+        form = ChangeOptionForm(request.POST)
+
+        cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+        cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+        cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
+
+        if form.is_valid():
+            for_where = form.cleaned_data['for_where']
+            return render(request, template_name,
+                      {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
 
 
 def logout(request):
