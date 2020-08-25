@@ -48,6 +48,11 @@
 .img_container{
     position: relative;
 }
+img {
+    width: 250px;
+    height: 300px;
+    object-fit: cover;
+}
 .list__img {
     width: 250px;
     margin: 3px;

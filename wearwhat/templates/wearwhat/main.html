@@ -11,8 +11,9 @@
                     <table>
                         {% for clo in top %}
                             <td id="fade-in-bottom">
-                                <img src="{{ clo.image }}" class="list__img">
-
+                                <div class="img_box">
+                                    <img src="{{ clo.image }}" class="list__img">
+                                </div>
                                 {% if user in clo.top_like_users.all %}
                                     <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                                 {% else %}

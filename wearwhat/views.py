@@ -14,10 +14,12 @@ from .models import Top, Under, Shoes
 
 import random
 import json
+from pyowm import OWM
 
 user = get_user_model()
 
 
+# 로그인 전 메인페이지
 def index_view(request):
     # DB 옷 데이터 개수
     top_count = Top.objects.all().aggregate(Count('id')).get('id__count')
@@ -34,24 +36,26 @@ def index_view(request):
         # return_url = reverse_lazy('index_page')
         return render(request, 'wearwhat/index.html', {'cloth_count': cloth_count})
 
-#로그인
+
+# 로그인
 def login(request):
     if request.method == 'POST':
-        #post 요청이 들어온다면
+        # post 요청이 들어온다면
         # print('유저네임', request.POST['username'])
         username = request.POST['username']
         password = request.POST['pass']
         user = auth.authenticate(request, username=username, password=password)
-        #입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
+        # 입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
         if user is not None:
-            #데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
+            # 데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
             auth.login(request, user)
             return HttpResponseRedirect(reverse('main_page'))
         else:
-            #회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
+            # 회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
             return render(request, 'registration/login.html', {'error': 'username or password is incorrect.'})
     else:
         return render(request, 'registration/login.html')
+
 
 # 회원가입
 class SignUp(generic.CreateView):
@@ -100,27 +104,35 @@ class Main_page(View):
     def get(self, request):
         current_user = request.user
         if current_user.is_authenticated:
-          # 리스트 뿌리기
-          print('getTop: ', self.getTop)
-          if not self.getTop or not self.getUnder or not self.getShoes:
-              self.get_random_Top(request)
-              self.get_random_Under(request)
-              self.get_random_Shoes(request)
-          else:
-              pass
-          # 리스트 뿌리기
-          cloth_top = Top.objects.filter(id__in=self.getTop)
-          cloth_under = Under.objects.filter(id__in=self.getUnder)
-          cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
+            # 현재 온도
+            owm = OWM('b00d21f228833645831c1f84465ca689')
+            mgr = owm.weather_manager()
+            observation = mgr.weather_at_place('Seoul,KR')
+            temp = observation.weather.temperature('celsius').get('temp')
+            # print('현재온도: ', temperature)
 
-          # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
-          # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
-          # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+            # 랜덤함수 이용
+            print('getTop: ', self.getTop)
+            if not self.getTop or not self.getUnder or not self.getShoes:
+                self.get_random_Top(request)
+                self.get_random_Under(request)
+                self.get_random_Shoes(request)
+            else:
+                pass
 
-          # 폼 뿌리기
-          # form = ChangeOptionForm()
-          # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
-          return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
+            # if temp >= 23:
+            #     Top.objects.filter(Q(temperature=23) | Q(gender='남,여')).values_list('id', flat=True)
+
+            # 리스트 뿌리기
+            cloth_top = Top.objects.filter(id__in=self.getTop)
+            cloth_under = Under.objects.filter(id__in=self.getUnder)
+            cloth_shoes = Shoes.objects.filter(id__in=self.getShoes)
+
+            # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
+            # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
+            # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
+
+            return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temperature': temp})
         else:
             return render(request, 'wearwhat/index.html')
 
@@ -155,12 +167,12 @@ class Main_page(View):
             gender = 'F'
 
         if gender == 'M':
-            for i in Top.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
+            for i in Top.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
                 top_id_list.append(i)
             top_random = random.sample(top_id_list, 5)
             self.setTop = top_random
         else:
-            for i in Top.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+            for i in Top.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
                 top_id_list.append(i)
             top_random = random.sample(top_id_list, 5)
             self.setTop = top_random
@@ -177,17 +189,16 @@ class Main_page(View):
             gender = 'F'
 
         if gender == 'M':
-            for i in Under.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
+            for i in Under.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
                 under_id_list.append(i)
             under_random = random.sample(under_id_list, 5)
             self.setUnder = under_random
         else:
-            for i in Under.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+            for i in Under.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
                 under_id_list.append(i)
             under_random = random.sample(under_id_list, 5)
             self.setUnder = under_random
         return self.getUnder
-
 
     # 신발 랜덤출력 함수
     def get_random_Shoes(self, request):
@@ -200,12 +211,12 @@ class Main_page(View):
             gender = 'F'
 
         if gender == 'M':
-            for i in Shoes.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
+            for i in Shoes.objects.filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
                 shoes_id_list.append(i)
             shoes_random = random.sample(shoes_id_list, 5)
             self.setShoes = shoes_random
         else:
-            for i in Shoes.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+            for i in Shoes.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
                 shoes_id_list.append(i)
             shoes_random = random.sample(shoes_id_list, 5)
             self.setShoes = shoes_random
@@ -227,7 +238,7 @@ def top_like(request):
         like_icon = True
 
     # 카운트 수와 좋아요의 여부를 key:value 형식(json) 으로 묶어 리턴
-    context = {'like_count':like.top_like_users.count(), 'like_icon':like_icon}
+    context = {'like_count': like.top_like_users.count(), 'like_icon': like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -243,7 +254,7 @@ def under_like(request):
         like.under_like_users.add(request.user)
         like_icon = True
 
-    context = {'like_count':like.under_like_users.count(), 'like_icon':like_icon}
+    context = {'like_count': like.under_like_users.count(), 'like_icon': like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -259,7 +270,7 @@ def shoes_like(request):
         like.shoes_like_users.add(request.user)
         like_icon = True
 
-    context = {'like_count':like.shoes_like_users.count(), 'like_icon':like_icon}
+    context = {'like_count': like.shoes_like_users.count(), 'like_icon': like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
