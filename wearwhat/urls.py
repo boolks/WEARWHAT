@@ -19,7 +19,7 @@ urlpatterns = [
     path('shoes_like', views.shoes_like, name='shoes_like'),
     path('before_selected/', views.Main_page.as_view(), name='main_page'),
     path('option_selected/', views.SelectOptions.as_view(), name='change_option'),
-
+    path('recommend_result/', views.recommend, name='recommend'),
     # localhost:8000/
     # path('main/', views.style_recommend, name='style_recommend'),
 ]
