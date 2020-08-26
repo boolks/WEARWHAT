@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -72,16 +74,7 @@ class Main_page(View):
     def get(self, request):
         current_user = request.user
         if current_user.is_authenticated:
-            # 현재 온도
-            owm = OWM('b00d21f228833645831c1f84465ca689')
-            mgr = owm.weather_manager()
-            observation = mgr.weather_at_place('Seoul,KR')
-            temp = observation.weather.temperature('celsius').get('temp')
-            # print('현재온도: ', temperature)
-
-            # if temp >= 23:
-            #     Top.objects.filter(Q(temperature=23) | Q(gender='남,여')).values_list('id', flat=True)
-
+            temp = get_temperature()
             # 리스트 뿌리기
             cloth_top = Top.objects.filter(id__in=get_random_Top(request))
             cloth_under = Under.objects.filter(id__in=get_random_Under(request))
@@ -112,24 +105,53 @@ class Main_page(View):
         return render(request, 'wearwhat/recommend_select.html', {'form': form})
 
 
+# 현재 온도 추출 함수
+def get_temperature():
+    owm = OWM('b00d21f228833645831c1f84465ca689')
+    mgr = owm.weather_manager()
+    observation = mgr.weather_at_place('Seoul,KR')
+    temp = observation.weather.temperature('celsius').get('temp')
+    # print('현재온도: ', temperature)
+    return temp
+
 # 상의 랜덤출력 함수
 def get_random_Top(request):
     top_id_list = []
     current_user = request.user
-
+    # temp = get_temperature()
+    temp = 15
     if current_user.is_authenticated:
         gender = current_user.gender
     else:
         gender = 'F'
 
+    # ===========================아직===========================
+    # 현재 온도 >= 23 인 경우 긴팔, 두꺼운 옷 제외
+    # if temp >= 23:
+    #     exclude_list = [17, 20]
+    # # 17 < 현재온도 < 23 인 경우 두꺼운 옷 제외 (반팔은 걍 ㅇㅋ)
+    # elif 17 < temp < 23:
+    #     exclude_list = [17]
+    # # 현재 온도 <= 17 인 경우 얇은 옷 제외
+    # else:
+    #     exclude_list = [23, 20]
+
+    # qs = Top.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True)
+    # qs2 = qs.filter(temperature=17).values_list('id', flat=True)
+    # result = list(chain(qs, qs2))
+    # print('====qs:', result)
+    # ===========================================================
     if gender == 'M':
         for i in Top.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
             top_id_list.append(i)
+            # print(top_id_list)
         top_random = random.sample(top_id_list, 5)
     else:
-        for i in Top.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+        for i in Top.objects.exclude(temperature=23).filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
             top_id_list.append(i)
+            # print('zzzzzzzz',top_id_list[:10])
         top_random = random.sample(top_id_list, 5)
+
     return top_random
 
 
