@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -14,10 +16,12 @@ from .models import Top, Under, Shoes
 
 import random
 import json
+from pyowm import OWM
 
 user = get_user_model()
 
 
+# 로그인 전 메인페이지
 def index_view(request):
     # DB 옷 데이터 개수
     top_count = Top.objects.all().aggregate(Count('id')).get('id__count')
@@ -34,24 +38,26 @@ def index_view(request):
         # return_url = reverse_lazy('index_page')
         return render(request, 'wearwhat/index.html', {'cloth_count': cloth_count})
 
-#로그인
+
+# 로그인
 def login(request):
     if request.method == 'POST':
-        #post 요청이 들어온다면
+        # post 요청이 들어온다면
         # print('유저네임', request.POST['username'])
         username = request.POST['username']
         password = request.POST['pass']
         user = auth.authenticate(request, username=username, password=password)
-        #입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
+        # 입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
         if user is not None:
-            #데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
+            # 데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
             auth.login(request, user)
             return HttpResponseRedirect(reverse('main_page'))
         else:
-            #회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
+            # 회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
             return render(request, 'registration/login.html', {'error': 'username or password is incorrect.'})
     else:
         return render(request, 'registration/login.html')
+
 
 # 회원가입
 class SignUp(generic.CreateView):
@@ -68,16 +74,13 @@ class Main_page(View):
     def get(self, request):
         current_user = request.user
         if current_user.is_authenticated:
+            temp = get_temperature()
+            # 리스트 뿌리기
+            cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+            cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+            cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
-          # 리스트 뿌리기
-          cloth_top = Top.objects.filter(id__in=get_random_Top(request))
-          cloth_under = Under.objects.filter(id__in=get_random_Under(request))
-          cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
-
-          # 폼 뿌리기
-          # form = ChangeOptionForm()
-          # return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
-          return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
+            return render(request, self.template_name, {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp})
         else:
             return render(request, 'wearwhat/index.html')
 
@@ -102,25 +105,55 @@ class Main_page(View):
         return render(request, 'wearwhat/recommend_select.html', {'form': form})
 
 
+# 현재 온도 추출 함수
+def get_temperature():
+    owm = OWM('b00d21f228833645831c1f84465ca689')
+    mgr = owm.weather_manager()
+    observation = mgr.weather_at_place('Seoul,KR')
+    temp = observation.weather.temperature('celsius').get('temp')
+    # print('현재온도: ', temperature)
+    return temp
+
 # 상의 랜덤출력 함수
 def get_random_Top(request):
     top_id_list = []
     current_user = request.user
-
+    # temp = get_temperature()
+    temp = 15
     if current_user.is_authenticated:
         gender = current_user.gender
     else:
         gender = 'F'
 
+    # ===========================아직===========================
+    # 현재 온도 >= 23 인 경우 긴팔, 두꺼운 옷 제외
+    # if temp >= 23:
+    #     exclude_list = [17, 20]
+    # # 17 < 현재온도 < 23 인 경우 두꺼운 옷 제외 (반팔은 걍 ㅇㅋ)
+    # elif 17 < temp < 23:
+    #     exclude_list = [17]
+    # # 현재 온도 <= 17 인 경우 얇은 옷 제외
+    # else:
+    #     exclude_list = [23, 20]
+
+    # qs = Top.objects.filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True)
+    # qs2 = qs.filter(temperature=17).values_list('id', flat=True)
+    # result = list(chain(qs, qs2))
+    # print('====qs:', result)
+    # ===========================================================
     if gender == 'M':
         for i in Top.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
             top_id_list.append(i)
+            # print(top_id_list)
         top_random = random.sample(top_id_list, 5)
     else:
-        for i in Top.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
+        for i in Top.objects.exclude(temperature=23).filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
             top_id_list.append(i)
+            # print('zzzzzzzz',top_id_list[:10])
         top_random = random.sample(top_id_list, 5)
+
     return top_random
+
 
 # 하의 랜덤출력 함수
 def get_random_Under(request):
@@ -141,7 +174,6 @@ def get_random_Under(request):
             under_id_list.append(i)
         under_random = random.sample(under_id_list, 5)
     return under_random
-
 
 # 신발 랜덤출력 함수
 def get_random_Shoes(request):
@@ -179,7 +211,7 @@ def top_like(request):
         like_icon = True
 
     # 카운트 수와 좋아요의 여부를 key:value 형식(json) 으로 묶어 리턴
-    context = {'like_count':like.top_like_users.count(), 'like_icon':like_icon}
+    context = {'like_count': like.top_like_users.count(), 'like_icon': like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -195,7 +227,7 @@ def under_like(request):
         like.under_like_users.add(request.user)
         like_icon = True
 
-    context = {'like_count':like.under_like_users.count(), 'like_icon':like_icon}
+    context = {'like_count': like.under_like_users.count(), 'like_icon': like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -211,7 +243,7 @@ def shoes_like(request):
         like.shoes_like_users.add(request.user)
         like_icon = True
 
-    context = {'like_count':like.shoes_like_users.count(), 'like_icon':like_icon}
+    context = {'like_count': like.shoes_like_users.count(), 'like_icon': like_icon}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
