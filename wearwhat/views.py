@@ -242,6 +242,7 @@ def recommend(request):
 
         if form.is_valid():
             for_where = form.cleaned_data['for_where']
+
             return render(request, template_name,
                       {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
 
