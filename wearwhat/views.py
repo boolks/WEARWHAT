@@ -118,12 +118,18 @@ def get_temperature():
 def get_random_Top(request):
     top_id_list = []
     current_user = request.user
+    style = current_user.fav_style
+    if style == 'FORMAL':
+        style = '포멀'
+    elif style == 'CASUAL':
+        style = '캐주얼'
     # temp = get_temperature()
     temp = 15
-    if current_user.is_authenticated:
-        gender = current_user.gender
+    gender = current_user.gender
+    if gender == 'M':
+        gender = '남'
     else:
-        gender = 'F'
+        gender = '여'
 
     # ===========================아직===========================
     # 현재 온도 >= 23 인 경우 긴팔, 두꺼운 옷 제외
@@ -141,16 +147,22 @@ def get_random_Top(request):
     # result = list(chain(qs, qs2))
     # print('====qs:', result)
     # ===========================================================
-    if gender == 'M':
-        for i in Top.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
-            top_id_list.append(i)
-            # print(top_id_list)
-        top_random = random.sample(top_id_list, 5)
-    else:
-        for i in Top.objects.exclude(temperature=23).filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
-            top_id_list.append(i)
-            # print('zzzzzzzz',top_id_list[:10])
-        top_random = random.sample(top_id_list, 5)
+    # if gender == 'M':
+    #     for i in Top.objects.filter(Q(gender='남')|Q(gender='남,여')).filter(Q(style=style)|Q(style='ALL')).values_list('id', flat=True):
+    #         top_id_list.append(i)
+    #         # print(top_id_list)
+    #     top_random = random.sample(top_id_list, 5)
+    # else:
+    #     for i in Top.objects.exclude(temperature=23).filter(Q(gender='여')|Q(gender='남,여')).filter(style=style|Q(style='ALL')).values_list('id', flat=True):
+    #         top_id_list.append(i)
+    #         # print('zzzzzzzz',top_id_list[:10])
+    #     top_random = random.sample(top_id_list, 5)
+    for i in Top.objects.exclude(temperature=23).filter(Q(gender=gender) | Q(gender='남,여')).filter(
+            style=style).values_list(
+            'id', flat=True):
+        top_id_list.append(i)
+        # print(top_id_list)
+    top_random = random.sample(top_id_list, 5)
 
     return top_random
 
@@ -159,42 +171,42 @@ def get_random_Top(request):
 def get_random_Under(request):
     under_id_list = []
     current_user = request.user
-
-    if current_user.is_authenticated:
-        gender = current_user.gender
-    else:
-        gender = 'F'
-
+    style = current_user.fav_style
+    if style == 'FORMAL':
+        style = '포멀'
+    elif style == 'CASUAL':
+        style = '캐주얼'
+    gender = current_user.gender
     if gender == 'M':
-        for i in Under.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
-            under_id_list.append(i)
-        under_random = random.sample(under_id_list, 5)
+        gender = '남'
     else:
-        for i in Under.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
-            under_id_list.append(i)
-        under_random = random.sample(under_id_list, 5)
+        gender = '여'
+
+    for i in Under.objects.filter(Q(gender=gender) | Q(gender='남,여')).values_list('id', flat=True):
+        under_id_list.append(i)
+    under_random = random.sample(under_id_list, 5)
     return under_random
 
 # 신발 랜덤출력 함수
 def get_random_Shoes(request):
     shoes_id_list = []
     current_user = request.user
+    style = current_user.fav_style
+    if style == 'FORMAL':
+        style = '포멀'
+    elif style == 'CASUAL':
+        style = '캐주얼'
 
-    if current_user.is_authenticated:
-        gender = current_user.gender
-    else:
-        gender = 'F'
-
+    gender = current_user.gender
     if gender == 'M':
-        for i in Shoes.objects.filter(Q(gender='남')|Q(gender='남,여')).values_list('id', flat=True):
-            shoes_id_list.append(i)
-        shoes_random = random.sample(shoes_id_list, 5)
+        gender = '남'
     else:
-        for i in Shoes.objects.filter(Q(gender='여')|Q(gender='남,여')).values_list('id', flat=True):
-            shoes_id_list.append(i)
-        shoes_random = random.sample(shoes_id_list, 5)
-    return shoes_random
+        gender = '여'
 
+    for i in Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
+        shoes_id_list.append(i)
+    shoes_random = random.sample(shoes_id_list, 5)
+    return shoes_random
 
 # 상의 좋아요
 def top_like(request):
@@ -264,16 +276,25 @@ class SelectOptions(Main_page):
 
 # 추천 받는 메소드 구현중 위에거랑 합치든 해야댐
 def recommend(request):
+    current_user = request.user
     template_name = 'wearwhat/recommend_result.html'
     if request.method == "POST":
         form = ChangeOptionForm(request.POST)
 
-        cloth_top = Top.objects.filter(id__in=get_random_Top(request))
-        cloth_under = Under.objects.filter(id__in=get_random_Under(request))
-        cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
-
         if form.is_valid():
+            # fav_style_change = form.cleaned_data['fav_style_change']
             for_where = form.cleaned_data['for_where']
+            if for_where == 'SCHOOL':
+                current_user.fav_style = 'CASUAL'
+            elif for_where == 'WORK':
+                current_user.fav_style = 'FORMAL'
+            else:
+                current_user.fav_style = 'ALL'
+
+            cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+            cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+            cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
+
             return render(request, template_name,
                       {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
 
