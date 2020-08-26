@@ -40,7 +40,7 @@ class Top(models.Model):
     image = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     style = models.TextField(blank=True, null=True)
-    temperature = models.TextField(blank=True, null=True)
+    temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     top_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='top_like_users')
 
@@ -61,7 +61,7 @@ class Under(models.Model):
     image = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     style = models.TextField(blank=True, null=True)
-    temperature = models.TextField(blank=True, null=True)
+    temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     under_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='under_like_users')
 
@@ -82,7 +82,7 @@ class Shoes(models.Model):
     image = models.TextField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     style = models.TextField(blank=True, null=True)
-    temperature = models.TextField(blank=True, null=True)
+    temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     shoes_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shoes_like_users')
 
