@@ -7,7 +7,7 @@ urlpatterns = [
     # localhost:8000/
     path('', views.index_view, name='index_page'),
     path('main', views.Main_page.as_view(), name='main_page'),
-    path('login', views.loㄸgin, name='login'),
+    path('login', views.login, name='login'),
 
     # path('top/<int:top_id>', views.top_like, name='top_like'),
     # path('under/<int:under_id>', views.under_like, name='under_like'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('shoes_like', views.shoes_like, name='shoes_like'),
     path('before_selected/', views.Main_page.as_view(), name='main_page'),
     path('option_selected/', views.SelectOptions.as_view(), name='change_option'),
-    path('recommend_result/', views.recommend, name='recommend'),
+
     # localhost:8000/
     # path('main/', views.style_recommend, name='style_recommend'),
 ]
