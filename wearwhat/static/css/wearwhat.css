@@ -34,44 +34,45 @@
     opacity: 1;
   }
 }
+
 .masthead{
     background-image: url(../images/background.jpg);
     background-repeat: no-repeat;
     background-position: center;
 }
-.page-header{
 
-}
 .main__title{
     text-align: center;
 }
-.img_container{
-    position: relative;
+
+table {
+    margin-bottom: 40px;
 }
-img {
+
+table .list__img{
+    display: table-cell;
+    vertical-align: middle;
+    object-fit: contain;
+
+}
+
+.card-text{
+    display: inline;
+}
+
+.list__img {
     width: 250px;
     height: 300px;
     object-fit: cover;
+    margin: 13px;
 }
-.list__img {
+
+.list__description p{
     width: 250px;
-    margin: 3px;
-}
-.glyphicon{
-    font-size: 30px;
-}
-/*.like-btn{*/
-/*    display: inline-block;*/
-/*    width: 50px;*/
-/*    height: 50px;*/
-/*    background-image: url("/wearwhat/static/images/like_heart.png");*/
-/*    background-position: -100px -400px;*/
-/*    text-indent: -9999px;*/
-/*    overflow: hidden;*/
-/*    border: none;*/
-/*}*/
-.list__description {
-    /*display: block;*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 #fade-in-bottom {
