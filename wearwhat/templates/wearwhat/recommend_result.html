@@ -6,23 +6,13 @@
     {% if user.is_authenticated %}
         <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>
 
-
         <section id="recommend">
-            <div class="recommend_imgs">
-                <!-- 추천 1 상의, 하의-->
-                <img src="https://via.placeholder.com/300">
-                <img src="https://via.placeholder.com/300">
-                <!-- 추천 2 상의, 하의-->
-                <img src="https://via.placeholder.com/300">
-                <img src="https://via.placeholder.com/300">
-            </div>
-
             <div class="recommend">
                 <!-- 상의 -->
                 <div class="top_list">
                     <table>
                         {% for clo in top %}
-                            <td>
+                            <td id="fade-in-bottom">
                                 <img src="{{ clo.image }}" class="list__img">
 
                                 {% if user in clo.top_like_users.all %}
@@ -37,6 +27,9 @@
                                 <div class="list__description">
                                     <p>{{ clo.style }} {{ clo.title }} </p>
                                 </div>
+                                <div>
+                                    <button type="submit" class="top_choice" cid="{{ clo.id }}">선택</button>
+                                </div>
                             </td>
 
                         {% endfor %}
@@ -47,7 +40,7 @@
                 <div class="under_list">
                     <table>
                         {% for clo in under %}
-                            <td>
+                            <td id="fade-in-bottom">
                                 <img src="{{ clo.image }}" class="list__img">
                                 {% if user in clo.under_like_users.all %}
                                     <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
@@ -61,6 +54,9 @@
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
                                 </div>
+                                <div>
+                                    <button type="submit" class="under_choice" cid="{{ clo.id }}">선택</button>
+                                </div>
                             </td>
                         {% endfor %}
                     </table>
@@ -70,7 +66,7 @@
                 <div class="shoes_list">
                     <table>
                         {% for clo in shoes %}
-                            <td>
+                            <td id="fade-in-bottom">
                                 <img src="{{ clo.image }}" class="list__img">
                                 {% if user in clo.shoes_like_users.all %}
                                     <button type="submit" style="background-color:transparent;  border:0px transparent solid;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
@@ -84,6 +80,9 @@
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
                                 </div>
+                                <div>
+                                    <button type="submit" class="shoes_choice" cid="{{ clo.id }}">선택</button>
+                                </div>
                             </td>
                         {% endfor %}
                     </table>
@@ -91,13 +90,27 @@
             </div>
         </section>
 
+        <aside id="temp">
+            <div class="recommend_imgs">
+                <!-- 추천 1 상의, 하의-->
+                <div>
+                    <img class="top_result_img" src="https://via.placeholder.com/300">
+                </div>
+                <div>
+                    <img class="under_result_img"  src="https://via.placeholder.com/300">
+                </div>
+                <div>
+                    <img class="shoes_result_img"  src="https://via.placeholder.com/300">
+                </div>
+            </div>
+        </aside>
+
     {% else %}
         <button><a href="{% url 'login' %}">login</a></button>
     {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
-        상의 스크립트
     <script type="text/javascript">
         $('.top_like').click(function(){
             var num = $(this).attr('cid')
@@ -118,10 +131,7 @@
                 }
             });
         });
-    </script>
 
-        하의 스크립트
-    <script type="text/javascript">
         $('.under_like').click(function(){
             var num = $(this).attr('cid')
             $.ajax({
@@ -141,10 +151,7 @@
                 }
             });
         });
-    </script>
 
-        신발 스크립트
-    <script type="text/javascript">
         $('.shoes_like').click(function(){
             var num = $(this).attr('cid')
             $.ajax({
@@ -158,6 +165,51 @@
                     } else{
                         $("#shoes_ico-"+num).attr('class', 'far fa-heart');
                     }
+                },
+                error:function(request,status,error){
+                    alert('실패');
+                }
+            });
+        });
+
+        $('.top_choice').click(function(){
+            var num = $(this).attr('cid')
+            $.ajax({
+                type: "POST", // 데이터를 전송하는 방법을 지정한다.
+                url: "{% url 'top_choice' %}", // 통신할 url을 지정한다.
+                data: {'top_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
+                    $('.top_result_img').attr('src', response.img)
+                },
+                error:function(request,status,error){
+                    alert('실패');
+                }
+            });
+        });
+
+        $('.under_choice').click(function(){
+            var num = $(this).attr('cid')
+            $.ajax({
+                type: "POST", // 데이터를 전송하는 방법을 지정한다.
+                url: "{% url 'under_choice' %}", // 통신할 url을 지정한다.
+                data: {'under_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
+                    $('.under_result_img').attr('src', response.img)
+                },
+                error:function(request,status,error){
+                    alert('실패');
+                }
+            });
+        });
+
+        $('.shoes_choice').click(function(){
+            var num = $(this).attr('cid')
+            $.ajax({
+                type: "POST", // 데이터를 전송하는 방법을 지정한다.
+                url: "{% url 'shoes_choice' %}", // 통신할 url을 지정한다.
+                data: {'shoes_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
+                    $('.shoes_result_img').attr('src', response.img)
                 },
                 error:function(request,status,error){
                     alert('실패');
