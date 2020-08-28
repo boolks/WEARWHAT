@@ -20,6 +20,9 @@ urlpatterns = [
     path('before_selected/', views.Main_page.as_view(), name='main_page'),
     path('option_selected/', views.SelectOptions.as_view(), name='change_option'),
     path('recommend_result/', views.recommend, name='recommend'),
+    path('top_choice', views.top_choice, name='top_choice'),
+    path('under_choice', views.under_choice, name='under_choice'),
+    path('shoes_choice', views.shoes_choice, name='shoes_choice'),
     # localhost:8000/
     # path('main/', views.style_recommend, name='style_recommend'),
 ]
