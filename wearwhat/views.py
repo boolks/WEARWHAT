@@ -146,17 +146,10 @@ def get_random_Top(request):
     elif temp < 17:
         exclude_list = [27, 23, 20]
 
-    if gender == 'M':
-        for i in Top.objects.exclude(temperature__in=exclude_list). \
-                filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
-            top_id_list.append(i)
-        top_random = random.sample(top_id_list, 5)
-    else:
-        for i in Top.objects.exclude(temperature__in=exclude_list). \
-                filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
-            top_id_list.append(i)
-        top_random = random.sample(top_id_list, 5)
-    print('================상의:', top_random)
+    for i in Top.objects.exclude(temperature__in=exclude_list). \
+            filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
+        top_id_list.append(i)
+    top_random = random.sample(top_id_list, 5)
     return top_random
 
 
@@ -190,22 +183,10 @@ def get_random_Under(request):
     elif temp < 17:
         exclude_list = [27, 23]
 
-    if current_user.is_authenticated:
-        gender = current_user.gender
-    else:
-        gender = 'F'
-
-    if gender == 'M':
-        for i in Under.objects.exclude(temperature__in=exclude_list).\
-                filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
-            under_id_list.append(i)
-        under_random = random.sample(under_id_list, 5)
-    else:
-        for i in Under.objects.exclude(temperature__in=exclude_list).\
-                filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
-            under_id_list.append(i)
-        under_random = random.sample(under_id_list, 5)
-    print('================하의:', under_random)
+    for i in Under.objects.exclude(temperature__in=exclude_list). \
+            filter(Q(gender=gender) | Q(gender='남,여')).values_list('id', flat=True):
+        under_id_list.append(i)
+    under_random = random.sample(under_id_list, 5)
     return under_random
 
 
@@ -239,17 +220,10 @@ def get_random_Shoes(request):
     elif temp < 17:
         exclude_list = [27, 23]
 
-    if gender == 'M':
-        for i in Shoes.objects.exclude(temperature__in=exclude_list).\
-                filter(Q(gender='남') | Q(gender='남,여')).values_list('id', flat=True):
-            shoes_id_list.append(i)
-        shoes_random = random.sample(shoes_id_list, 5)
-    else:
-        for i in Shoes.objects.exclude(temperature__in=exclude_list).\
-                filter(Q(gender='여') | Q(gender='남,여')).values_list('id', flat=True):
-            shoes_id_list.append(i)
-        shoes_random = random.sample(shoes_id_list, 5)
-    print('================신발:', shoes_random)
+    for i in Shoes.objects.exclude(temperature__in=exclude_list). \
+            filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
+        shoes_id_list.append(i)
+    shoes_random = random.sample(shoes_id_list, 5)
     return shoes_random
 
 # 상의 좋아요
