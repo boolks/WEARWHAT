@@ -343,7 +343,7 @@ def recommend(request):
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
 
 
-# 상의 결과 띄우기
+# 상의 결과 선택
 def top_choice(request):
     # html로 부터 top_id를 받아옴
     top_id = request.POST.get('top_id', None)
@@ -356,7 +356,7 @@ def top_choice(request):
     context = {'img': img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
-# 하의 결과 띄우기
+# 하의 결과 선택
 def under_choice(request):
     # html로 부터 top_id를 받아옴
     under_id = request.POST.get('under_id', None)
@@ -369,7 +369,7 @@ def under_choice(request):
     context = {'img': img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
-# 신발 결과 띄우기
+# 신발 결과 선택
 def shoes_choice(request):
     # html로 부터 top_id를 받아옴
     shoes_id = request.POST.get('shoes_id', None)
