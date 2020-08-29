@@ -34,15 +34,36 @@
     opacity: 1;
   }
 }
-
-.masthead{
-    background-image: url(../images/background.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
+#logout_btn{
+    font-size: 10px;
+    margin: 3px;
+    position: absolute;
+    right: 0;
+}
+#logout_btn a{
+    color: black;
 }
 
-.main__title{
+.page-header{
+    width: 100%;
     text-align: center;
+}
+
+.page-header i{
+    font-size: 70px;
+    display: block;
+}
+
+.recommend{
+    margin: auto;
+    width: 80%;
+    text-align: center;
+}
+
+a, a:link ,a:visited ,a:hover ,a:active {
+    text-decoration: none;
+    background-color: transparent;
+    color: white;
 }
 
 table {
@@ -53,7 +74,6 @@ table .list__img{
     display: table-cell;
     vertical-align: middle;
     object-fit: contain;
-
 }
 
 .card-text{

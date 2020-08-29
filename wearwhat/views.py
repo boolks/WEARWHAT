@@ -25,11 +25,17 @@ def get_temperature():
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place('Seoul,KR')
     temp = observation.weather.temperature('celsius').get('temp')
+    weather = observation.weather.status
+    # print('현재날씨: ', weather)
     # print('현재온도: ', temperature)
-    return temp
+    return temp, weather
 
 
-temp = get_temperature()
+temp, weather = get_temperature()
+weather = weather.lower()
+# print('온도:', temp)
+print('날씨:', weather)
+
 
 
 # 로그인 전 메인페이지
@@ -91,7 +97,7 @@ class Main_page(View):
             cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
             return render(request, self.template_name,
-                          {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp})
+                          {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
         else:
             return render(request, 'wearwhat/index.html')
 
