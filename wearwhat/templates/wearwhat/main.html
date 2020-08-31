@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container-fluid">
         <div class="page-header">
-            <button type="button" id="logout_btn" class="btn btn-outline-secondary"><a href="{% url 'logout' %}?next={{ request.path }}">로그아웃</a></button>
+            <button type="button" id="logout_btn" class="btn btn-outline-secondary" style="margin-right: 15px"><a href="{% url 'logout' %}?next={{ request.path }}">로그아웃</a></button>
             {% if weather == "sun" %}
                 <i class="fas fa-sun"></i>
             {% endif %}
@@ -26,102 +26,106 @@
             <h1><b>{% if user.fav_style == 'CASUAL' %}캐주얼{% else %}포멀{% endif %}</b> 스타일을 선호하는
                 <b>{% if user.gender == 'W'%}<b>여성{% else %}남성{% endif %}</b><br> <b>{{ user.username }}</b>님을 위한 날씨 기반 추천 목록입니다</h1>
         </div>
-    </div>
-    <div class="recommend">
-        <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">추천 받기</a></button>
-        <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'my_choice' %}">내가 저장한 옷</a></button>
-        <!-- 상의 -->
-        <div class="top_list">
-            <table>
-                {% for clo in top %}
-                    <td id="fade-in-bottom">
-                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
-                            <img src="{{ clo.image }}" class="list__img">
-                        </a>
-                        <div class="like">
-                            {% if user in clo.top_like_users.all %}
-                                <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+        <div class="recommend">
+            <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">추천 받기</a></button>
+            <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'my_choice' %}">내가 저장한 옷</a></button><br><br>
+            <!-- 상의 -->
+            <p class="list_title">　상의</p>
+            <div class="top_list">
+                <table>
+                    {% for clo in top %}
+                        <td id="fade-in-bottom">
+                            <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                <img src="{{ clo.image }}" class="list__img">
+                            </a>
+                            <div class="like">
+                                {% if user in clo.top_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="top_count-{{ clo.id }}">
+                                    {{ clo.top_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+
+                    {% endfor %}
+                </table>
+            </div>
+
+            <!-- 하의 -->
+            <p class="list_title">　하의</p>
+            <div class="under_list">
+                <table>
+                    {% for clo in under %}
+                        <td id="fade-in-bottom">
+                            <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                <img src="{{ clo.image }}" class="list__img">
+                            </a>
+                            {% if user in clo.under_like_users.all %}
+                                <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                             {% else %}
-                                <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
                             {% endif %}
+    {#                                <a href="{% url 'under_like'  under_id=clo.id %}">#}
+    {#                                    {% if user in clo.under_like_users.all %}#}
+    {#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
+    {#                                    {% else %}#}
+    {#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="far fa-heart"></i></a>#}
+    {#                                    {% endif %}#}
+    {#                                </a>#}
                             <!--좋아요 갯수 카운트-->
-                            <p class="card-text" id="top_count-{{ clo.id }}">
-                                {{ clo.top_like_users.count }} 명이 좋아합니다.
+                            <p class="card-text" id="under_count-{{ clo.id }}">
+                                {{ clo.under_like_users.count }} 명이 좋아합니다.
                             </p>
-                        </div>
-                        <div class="list__description">
-                            <p> {{ clo.title }} </p>
-                        </div>
-                    </td>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </table>
+            </div>
 
-                {% endfor %}
-            </table>
-        </div>
-
-        <!-- 하의 -->
-        <div class="under_list">
-            <table>
-                {% for clo in under %}
-                    <td id="fade-in-bottom">
-                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
-                            <img src="{{ clo.image }}" class="list__img">
-                        </a>
-                        {% if user in clo.under_like_users.all %}
-                            <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
-                        {% else %}
-                            <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
-                        {% endif %}
-{#                                <a href="{% url 'under_like'  under_id=clo.id %}">#}
-{#                                    {% if user in clo.under_like_users.all %}#}
-{#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
-{#                                    {% else %}#}
-{#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="far fa-heart"></i></a>#}
-{#                                    {% endif %}#}
-{#                                </a>#}
-                        <!--좋아요 갯수 카운트-->
-                        <p class="card-text" id="under_count-{{ clo.id }}">
-                            {{ clo.under_like_users.count }} 명이 좋아합니다.
-                        </p>
-                        <div class="list__description">
-                            <p> {{ clo.title }} </p>
-                        </div>
-                    </td>
-                {% endfor %}
-            </table>
-        </div>
-
-        <!-- 신발 -->
-        <div class="shoes_list">
-            <table>
-                {% for clo in shoes %}
-                    <td id="fade-in-bottom">
-                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
-                            <img src="{{ clo.image }}" class="list__img">
-                        </a>
-                        {% if user in clo.shoes_like_users.all %}
-                            <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
-                        {% else %}
-                            <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
-                        {% endif %}
-{#                                <a href="{% url 'shoes_like'  shoes_id=clo.id %}">#}
-{#                                    {% if user in clo.shoes_like_users.all %}#}
-{#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
-{#                                    {% else %}#}
-{#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="far fa-heart"></i></a>#}
-{#                                    {% endif %}#}
-{#                                </a>#}
-                        <!--좋아요 갯수 카운트-->
-                        <p class="card-text" id="shoes_count-{{ clo.id }}">
-                            {{ clo.shoes_like_users.count }} 명이 좋아합니다.
-                        </p>
-                        <div class="list__description">
-                            <p> {{ clo.title }} </p>
-                        </div>
-                    </td>
-                {% endfor %}
-            </table>
+            <!-- 신발 -->
+            <p class="list_title">　신발</p>
+            <div class="shoes_list">
+                <table>
+                    {% for clo in shoes %}
+                        <td id="fade-in-bottom">
+                            <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                <img src="{{ clo.image }}" class="list__img">
+                            </a>
+                            {% if user in clo.shoes_like_users.all %}
+                                <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                            {% else %}
+                                <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                            {% endif %}
+    {#                                <a href="{% url 'shoes_like'  shoes_id=clo.id %}">#}
+    {#                                    {% if user in clo.shoes_like_users.all %}#}
+    {#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
+    {#                                    {% else %}#}
+    {#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="far fa-heart"></i></a>#}
+    {#                                    {% endif %}#}
+    {#                                </a>#}
+                            <!--좋아요 갯수 카운트-->
+                            <p class="card-text" id="shoes_count-{{ clo.id }}">
+                                {{ clo.shoes_like_users.count }} 명이 좋아합니다.
+                            </p>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
     {#    상의 스크립트#}

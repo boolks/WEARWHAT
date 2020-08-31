@@ -1,15 +1,18 @@
 {% extends 'wearwhat/base.html' %}
 
 {% block content %}
-
-    <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a href="{% url 'main_page' %}">메인으로</a></button>
-    <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a onClick="window.location.reload()">다시 추천 받기</a></button>
     {% if user.is_authenticated %}
-        <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>
+    <div class="page-header">
+        <button type="button" id="logout_btn" class="btn btn-outline-secondary" style="margin-right: 15px"><a href="{% url 'logout' %}?next={{ request.path }}">로그아웃</a></button>
+        <h3 style="margin: 30px 0px 30px 0px"><b>{% if where == 'SCHOOL' %}학교{% elif where == 'WORK' %}직장{% else %}데이트{% endif %}</b>를 위한 추천입니다 (●'◡'●)</h3>
+        <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a href="{% url 'main_page' %}">메인으로</a></button>
+        <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a onClick="window.location.reload()">다시 추천 받기</a></button>
+    </div>
 
         <div class="wrap">
-            <div class="section">
+            <div class="section border-right" >
                 <!-- 상의 -->
+                <p class="list_title">　상의</p>
                 <div class="top_list">
                     <table>
                         {% for clo in top %}
@@ -38,6 +41,7 @@
                 </div>
 
                 <!-- 하의 -->
+                <p class="list_title">　하의</p>
                 <div class="under_list">
                     <table>
                         {% for clo in under %}
@@ -64,6 +68,7 @@
                 </div>
 
                 <!-- 신발 -->
+                <p class="list_title">　신발</p>
                 <div class="shoes_list">
                     <table>
                         {% for clo in shoes %}
