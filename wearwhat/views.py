@@ -133,7 +133,7 @@ def get_random_Top(request):
         style = '포멀'
     elif style == 'CASUAL':
         style = '캐주얼'
-        
+
     gender = current_user.gender
     if gender == 'M':
         gender = '남'
@@ -152,9 +152,14 @@ def get_random_Top(request):
     elif temp < 17:
         exclude_list = [27, 23, 20]
 
-    for i in Top.objects.exclude(temperature__in=exclude_list). \
-            filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
-        top_id_list.append(i)
+    if style == 'ALL':
+        for i in Top.objects.exclude(temperature__in=exclude_list). \
+                filter(Q(gender=gender) | Q(gender='남,여')).values_list('id', flat=True):
+            top_id_list.append(i)
+    else:
+        for i in Top.objects.exclude(temperature__in=exclude_list). \
+                filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
+            top_id_list.append(i)
     top_random = random.sample(top_id_list, 5)
     return top_random
 
@@ -226,9 +231,14 @@ def get_random_Shoes(request):
     elif temp < 17:
         exclude_list = [27, 23]
 
-    for i in Shoes.objects.exclude(temperature__in=exclude_list). \
-            filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
-        shoes_id_list.append(i)
+    if style == 'ALL':
+        for i in Shoes.objects.exclude(temperature__in=exclude_list). \
+                filter(Q(gender=gender) | Q(gender='남,여')).values_list('id', flat=True):
+            shoes_id_list.append(i)
+    else:
+        for i in Shoes.objects.exclude(temperature__in=exclude_list). \
+                filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
+            shoes_id_list.append(i)
     shoes_random = random.sample(shoes_id_list, 5)
     return shoes_random
 
@@ -362,6 +372,66 @@ def shoes_choice(request):
     context = {'img': img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
+
+def item_save(request):
+    top_id = request.POST.get('top_id', None)
+    under_id = request.POST.get('under_id', None)
+    shoes_id = request.POST.get('shoes_id', None)
+    top_item = get_object_or_404(Top, id=top_id)
+    under_item = get_object_or_404(Under, id=under_id)
+    shoes_item = get_object_or_404(Shoes, id=shoes_id)
+
+    if request.user in top_item.top_save.all():
+        print("already exists")
+    else:
+        top_item.top_save.add(request.user)
+        request.user.liked_top.add(top_id)
+
+    if request.user in under_item.under_save.all():
+        print("already exists")
+    else:
+        under_item.under_save.add(request.user)
+        request.user.like_under.add(under_id)
+
+    if request.user in shoes_item.shoes_save.all():
+        print("already exists")
+    else:
+        shoes_item.shoes_save.add(request.user)
+        request.user.like_shoes.add(shoes_id)
+
+    context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+class My_choice(View):
+    template_name = 'wearwhat/my_choice.html'
+
+    # 화면 뿌리기
+    def get(self, request):
+        top_list = []
+        under_list = []
+        shoes_list = []
+
+        current_user = request.user
+
+        if current_user.is_authenticated:
+            # 리스트 뿌리기
+
+            for i in current_user.liked_top.filter().values_list('id', flat=True):
+                top_list.append(i)
+            for i in current_user.like_under.filter().values_list('id', flat=True):
+                under_list.append(i)
+            for i in current_user.like_shoes.filter().values_list('id', flat=True):
+                shoes_list.append(i)
+
+            cloth_top = Top.objects.filter(id__in=top_list)
+            cloth_under = Under.objects.filter(id__in=under_list)
+            cloth_shoes = Shoes.objects.filter(id__in=shoes_list)
+
+            return render(request, self.template_name,
+                          {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
+        else:
+            return render(request, 'wearwhat/index.html')
 
 def logout(request):
     auth.logout(request)

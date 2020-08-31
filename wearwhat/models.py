@@ -43,6 +43,7 @@ class Top(models.Model):
     temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     top_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='top_like_users')
+    top_save = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='top_save')
 
     class Meta:
         managed = False
@@ -64,6 +65,7 @@ class Under(models.Model):
     temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     under_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='under_like_users')
+    under_save = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='under_save')
 
     class Meta:
         managed = False
@@ -85,6 +87,7 @@ class Shoes(models.Model):
     temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     shoes_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shoes_like_users')
+    shoes_save = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shoes_save')
 
     class Meta:
         managed = False
