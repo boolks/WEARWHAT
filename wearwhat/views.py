@@ -92,9 +92,13 @@ class Main_page(View):
         current_user = request.user
         if current_user.is_authenticated:
             # 리스트 뿌리기
-            cloth_top = Top.objects.filter(id__in=get_random_Top(request))
-            cloth_under = Under.objects.filter(id__in=get_random_Under(request))
-            cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
+
+            cloth_top = Top.objects.all().annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            cloth_under = Under.objects.all().annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            cloth_shoes = Shoes.objects.all().annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+            # cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+            # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+            # cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
             return render(request, self.template_name,
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
@@ -340,10 +344,8 @@ def top_choice(request):
     top_id = request.POST.get('top_id', None)
     choice = get_object_or_404(Top, id=top_id)
 
-    # top_id에 해당하는 상의에 현재 유저가 좋아요를 이미 눌렀을 경우 제거
     img = choice.image
 
-    # 카운트 수와 좋아요의 여부를 key:value 형식(json) 으로 묶어 리턴
     context = {'img': img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
@@ -353,10 +355,8 @@ def under_choice(request):
     under_id = request.POST.get('under_id', None)
     choice = get_object_or_404(Under, id=under_id)
 
-    # top_id에 해당하는 상의에 현재 유저가 좋아요를 이미 눌렀을 경우 제거
     img = choice.image
 
-    # 카운트 수와 좋아요의 여부를 key:value 형식(json) 으로 묶어 리턴
     context = {'img': img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
@@ -366,10 +366,8 @@ def shoes_choice(request):
     shoes_id = request.POST.get('shoes_id', None)
     choice = get_object_or_404(Shoes, id=shoes_id)
 
-    # top_id에 해당하는 상의에 현재 유저가 좋아요를 이미 눌렀을 경우 제거
     img = choice.image
 
-    # 카운트 수와 좋아요의 여부를 key:value 형식(json) 으로 묶어 리턴
     context = {'img': img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
