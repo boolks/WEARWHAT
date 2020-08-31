@@ -42,12 +42,22 @@ class Top(models.Model):
     style = models.TextField(blank=True, null=True)
     temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    top_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='top_like_users')
+    top_like_users = models.ManyToManyField(CustomUser, through='TopLikes', related_name='top_like_users')
     top_save = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='top_save')
 
     class Meta:
         managed = False
         db_table = 'clothes_top'
+
+
+class TopLikes(models.Model):
+    like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    top_like = models.ForeignKey(Top, on_delete=models.CASCADE)
+    like_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'top_likes'
 
 
 # 옷 정보 - 하의
@@ -64,12 +74,22 @@ class Under(models.Model):
     style = models.TextField(blank=True, null=True)
     temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    under_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='under_like_users')
+    under_like_users = models.ManyToManyField(CustomUser, through='UnderLikes', related_name='under_like_users')
     under_save = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='under_save')
 
     class Meta:
         managed = False
         db_table = 'clothes_under'
+
+
+class UnderLikes(models.Model):
+    like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    under_like = models.ForeignKey(Under, on_delete=models.CASCADE)
+    like_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'under_likes'
 
 
 # 옷 정보 - 신발
@@ -86,9 +106,19 @@ class Shoes(models.Model):
     style = models.TextField(blank=True, null=True)
     temperature = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    shoes_like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shoes_like_users')
+    shoes_like_users = models.ManyToManyField(CustomUser, through='ShoesLikes', related_name='shoes_like_users')
     shoes_save = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shoes_save')
 
     class Meta:
         managed = False
         db_table = 'clothes_shoes'
+
+
+class ShoesLikes(models.Model):
+    like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    shoes_like = models.ForeignKey(Shoes, on_delete=models.CASCADE)
+    like_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'shoes_likes'
