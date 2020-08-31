@@ -35,9 +35,17 @@
                 <table>
                     {% for clo in top %}
                         <td id="fade-in-bottom">
-                            <a class="clo_url" href="{{ clo.url }}" target="_blank">
-                                <img src="{{ clo.image }}" class="list__img">
-                            </a>
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>구매</span>
+                                </div>
+                            </div>
+
                             <div class="like">
                                 {% if user in clo.top_like_users.all %}
                                     <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
@@ -64,9 +72,16 @@
                 <table>
                     {% for clo in under %}
                         <td id="fade-in-bottom">
-                            <a class="clo_url" href="{{ clo.url }}" target="_blank">
-                                <img src="{{ clo.image }}" class="list__img">
-                            </a>
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>구매</span>
+                                </div>
+                            </div>
                             {% if user in clo.under_like_users.all %}
                                 <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                             {% else %}
@@ -97,9 +112,16 @@
                 <table>
                     {% for clo in shoes %}
                         <td id="fade-in-bottom">
-                            <a class="clo_url" href="{{ clo.url }}" target="_blank">
-                                <img src="{{ clo.image }}" class="list__img">
-                            </a>
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>구매</span>
+                                </div>
+                            </div>
                             {% if user in clo.shoes_like_users.all %}
                                 <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
                             {% else %}

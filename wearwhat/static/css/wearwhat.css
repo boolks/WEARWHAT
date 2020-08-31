@@ -144,3 +144,33 @@ table .list__img{
     margin-left: 31px;
     width: 70%;
 }
+
+.hover figure img {
+    position: relative;
+	opacity: 1;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+    z-index: 1;
+}
+.hover figure:hover img {
+	opacity: .5;
+}
+.column div span {
+    position: absolute;
+    top:40%;
+    left:50%;
+    transform: translate(-50%, -50%);
+	z-index: 2;
+	display: block;
+	color: #444;
+	font-size: 20px;
+    font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+	opacity: 0;
+}
+figure:hover+span {
+	opacity: 1;
+}
