@@ -92,10 +92,17 @@ class Main_page(View):
         current_user = request.user
         if current_user.is_authenticated:
             # 리스트 뿌리기
+            current_user = request.user
 
-            cloth_top = Top.objects.all().annotate(count=Count('top_like_users')).order_by('-count')[:5]
-            cloth_under = Under.objects.all().annotate(count=Count('under_like_users')).order_by('-count')[:5]
-            cloth_shoes = Shoes.objects.all().annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+            gender = current_user.gender
+            if gender == 'M':
+                gender = '남'
+            else:
+                gender = '여'
+
+            cloth_top = Top.objects.filter(gender=gender).annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            cloth_under = Under.objects.filter(gender=gender).annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            cloth_shoes = Shoes.objects.filter(gender=gender).annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
             # cloth_top = Top.objects.filter(id__in=get_random_Top(request))
             # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
             # cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
