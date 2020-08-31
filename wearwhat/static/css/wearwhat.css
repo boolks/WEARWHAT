@@ -45,6 +45,8 @@
 }
 
 .page-header{
+    margin-top: 17px;
+    margin-bottom: 30px;
     width: 100%;
     text-align: center;
 }
@@ -65,8 +67,16 @@ a, a:link ,a:visited ,a:hover ,a:active {
     background-color: transparent;
     color: white;
 }
-
+.list_title{
+    width: 84%;
+    border-bottom: solid 1px darkgrey;
+    text-align: left;
+    margin-left: 70px;
+    font-weight: bold;
+    opacity: 0.5;
+}
 table {
+    margin-left: 50px;
     margin-bottom: 40px;
 }
 
@@ -106,11 +116,19 @@ table .list__img{
 }
 
 .section {
+    margin-left: 20px;
+    padding-right: 30px;
     float: left;
 }
 
 .aside {
     float: right;
+    margin-top: 75px;
+    margin-left: 15px;
+}
+
+#main_btn {
+    margin-left: 37px;
 }
 
 #recommend_list__img img{
@@ -119,5 +137,10 @@ table .list__img{
     align-items: center;
     justify-content: center;
     width: 300px;
-    height: 300px;
+    height: 360px;
+    margin: 30px;
+}
+.top_choice, .under_choice, .shoes_choice{
+    margin-left: 31px;
+    width: 70%;
 }
