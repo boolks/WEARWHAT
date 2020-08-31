@@ -129,11 +129,7 @@ p {
     font-size: 1.125rem;
     font-weight: 700;
 }
-.btn-primary {
-    color: #fff;
-    background-color: #fed136;
-    border-color: #fed136;
-}
+
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
 }
