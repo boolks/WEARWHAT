@@ -320,8 +320,9 @@ def recommend(request):
         form = ChangeOptionForm(request.POST)
 
         if form.is_valid():
-            # fav_style_change = form.cleaned_data['fav_style_change']
+            fav_style_change = form.cleaned_data['fav_style_change']
             for_where = form.cleaned_data['for_where']
+            print('=====================', fav_style_change, for_where)
             if for_where == 'SCHOOL':
                 current_user.fav_style = 'CASUAL'
             elif for_where == 'WORK':
@@ -334,7 +335,7 @@ def recommend(request):
             cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
             return render(request, template_name,
-                          {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
+                          {'style': fav_style_change, 'where': for_where, 'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes})
 
 
 # 상의 결과 선택
