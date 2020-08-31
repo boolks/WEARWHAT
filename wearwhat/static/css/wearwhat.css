@@ -140,3 +140,7 @@ table .list__img{
     height: 360px;
     margin: 30px;
 }
+.top_choice, .under_choice, .shoes_choice{
+    margin-left: 31px;
+    width: 70%;
+}
