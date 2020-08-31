@@ -3,12 +3,11 @@
 {% block content %}
 
     <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a href="{% url 'main_page' %}">메인으로</a></button>
-    <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a onClick="window.location.reload()">다시 추천 받기</a></button>
     {% if user.is_authenticated %}
         <p class="top-menu">Hello {{ user.username }}<small>(<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</small></p>
 
-        <div class="wrap">
-            <div class="section">
+        <section id="recommend">
+            <div class="recommend">
                 <!-- 상의 -->
                 <div class="top_list">
                     <table>
@@ -27,9 +26,6 @@
                                 </p>
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
-                                </div>
-                                <div>
-                                    <button type="submit" class="top_choice" top_id="{{ clo.id }}">선택</button>
                                 </div>
                             </td>
 
@@ -55,9 +51,6 @@
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
                                 </div>
-                                <div>
-                                    <button type="submit" class="under_choice" under_id="{{ clo.id }}">선택</button>
-                                </div>
                             </td>
                         {% endfor %}
                     </table>
@@ -81,34 +74,12 @@
                                 <div class="list__description">
                                     <p> {{ clo.title }} </p>
                                 </div>
-                                <div>
-                                    <button type="submit" class="shoes_choice" shoes_id="{{ clo.id }}">선택</button>
-                                </div>
                             </td>
                         {% endfor %}
                     </table>
                 </div>
             </div>
-
-            <div class="aside">
-                <!-- 추천 1 상의, 하의-->
-                <div id="recommend_list__img">
-                    <img class="top_result_img" src="https://via.placeholder.com/300">
-                </div>
-                <div id="recommend_list__img">
-                    <img class="under_result_img"  src="https://via.placeholder.com/300">
-                </div>
-                <div id="recommend_list__img">
-                    <img class="shoes_result_img"  src="https://via.placeholder.com/300">
-                </div>
-                <button type="button" type="submit" id="main_btn" class="item_save btn-dark btn-lg">선택 리스트 저장하기</button>
-            </div>
-        </div>
-
-
-        </div>
-
-
+        </section>
 
     {% else %}
         <button><a href="{% url 'login' %}">login</a></button>
@@ -173,68 +144,6 @@
                 },
                 error:function(request,status,error){
                     alert('실패');
-                }
-            });
-        });
-
-        $('.top_choice').click(function(){
-            var num = $(this).attr('top_id')
-            $.ajax({
-                type: "POST", // 데이터를 전송하는 방법을 지정한다.
-                url: "{% url 'top_choice' %}", // 통신할 url을 지정한다.
-                data: {'top_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
-                    $('.top_result_img').attr('src', response.img)
-                },
-                error:function(request,status,error){
-                    alert('실패');
-                }
-            });
-        });
-
-        $('.under_choice').click(function(){
-            var num = $(this).attr('under_id')
-            $.ajax({
-                type: "POST", // 데이터를 전송하는 방법을 지정한다.
-                url: "{% url 'under_choice' %}", // 통신할 url을 지정한다.
-                data: {'under_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
-                    $('.under_result_img').attr('src', response.img)
-                },
-                error:function(request,status,error){
-                    alert('실패');
-                }
-            });
-        });
-
-        $('.shoes_choice').click(function(){
-            var num = $(this).attr('shoes_id')
-            $.ajax({
-                type: "POST", // 데이터를 전송하는 방법을 지정한다.
-                url: "{% url 'shoes_choice' %}", // 통신할 url을 지정한다.
-                data: {'shoes_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
-                    $('.shoes_result_img').attr('src', response.img)
-                },
-                error:function(request,status,error){
-                    alert('실패');
-                }
-            });
-        });
-
-        $('.item_save').click(function(){
-            var top = $('.top_choice').attr('top_id')
-            var under = $('.under_choice').attr('under_id')
-            var shoes = $('.shoes_choice').attr('shoes_id')
-            $.ajax({
-               type: "POST",
-               url: "{% url 'item_save' %}",
-               data: {'top_id': top, 'under_id':under, 'shoes_id':shoes,  'csrfmiddlewaretoken': '{{ csrf_token }}'},
-               success: function(response){
-                   alert('선택하신 옷으로 저장을 완료하였습니다.');
-               },
-                error:function(request, status, error){
-                   alert('실패');
                 }
             });
         });

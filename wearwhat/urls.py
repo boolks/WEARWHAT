@@ -23,6 +23,8 @@ urlpatterns = [
     path('top_choice', views.top_choice, name='top_choice'),
     path('under_choice', views.under_choice, name='under_choice'),
     path('shoes_choice', views.shoes_choice, name='shoes_choice'),
+    path('item_save', views.item_save, name='item_save'),
+    path('my_choice', views.My_choice.as_view(), name='my_choice')
     # localhost:8000/
     # path('main/', views.style_recommend, name='style_recommend'),
 ]

@@ -99,3 +99,25 @@ table .list__img{
 	-webkit-animation: fade-in-bottom 1.3s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 	        animation: fade-in-bottom 1.3s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 }
+
+.wrap {
+  position: absolute;
+  height: 500px;
+}
+
+.section {
+    float: left;
+}
+
+.aside {
+    float: right;
+}
+
+#recommend_list__img img{
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 300px;
+}
