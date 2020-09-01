@@ -21,8 +21,8 @@ class CustomUser(AbstractUser):
     fav_style = models.CharField(verbose_name='선호 스타일', max_length=6, choices=STYLES)
 
     liked_top = models.ManyToManyField('Top', related_name='liked_top', blank=True)
-    like_under = models.ManyToManyField('Under', related_name='liked_under', blank=True)
-    like_shoes = models.ManyToManyField('Shoes', related_name='liked_shoes', blank=True)
+    liked_under = models.ManyToManyField('Under', related_name='liked_under', blank=True)
+    liked_shoes = models.ManyToManyField('Shoes', related_name='liked_shoes', blank=True)
 
     class Meta:
         db_table = 'user'
