@@ -73,7 +73,7 @@ a, a:link ,a:visited ,a:hover ,a:active {
     text-align: left;
     margin-left: 70px;
     font-weight: bold;
-    opacity: 0.5;
+    opacity: 0.85;
 }
 table {
     margin-left: 50px;
@@ -119,6 +119,7 @@ table .list__img{
     margin-left: 20px;
     padding-right: 30px;
     float: left;
+    border-right: solid 1px rgba(0, 0, 0, .35);
 }
 
 .aside {

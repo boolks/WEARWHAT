@@ -18,6 +18,7 @@ import datetime
 import random
 import json
 from pyowm import OWM
+import datetime
 
 user = get_user_model()
 
@@ -37,7 +38,7 @@ def get_temperature():
 temp, weather = get_temperature()
 weather = weather.lower()
 # print('온도:', temp)
-print('날씨:', weather)
+# print('날씨:', weather)
 
 
 
@@ -168,9 +169,9 @@ class Main_page(View):
 # 상의 랜덤출력 함수
 def get_random_Top(request):
     top_id_list = []
-    
+
     current_user = request.user
-    
+
     style = current_user.fav_style
     if style == 'FORMAL':
         style = '포멀'
@@ -210,15 +211,15 @@ def get_random_Top(request):
 # 하의 랜덤출력 함수
 def get_random_Under(request):
     under_id_list = []
-    
+
     current_user = request.user
-    
+
     style = current_user.fav_style
     if style == 'FORMAL':
         style = '포멀'
     elif style == 'CASUAL':
         style = '캐주얼'
-        
+
     gender = current_user.gender
     if gender == 'M':
         gender = '남'
@@ -247,9 +248,9 @@ def get_random_Under(request):
 # 신발 랜덤출력 함수
 def get_random_Shoes(request):
     shoes_id_list = []
-    
+
     current_user = request.user
-    
+
     style = current_user.fav_style
     if style == 'FORMAL':
         style = '포멀'
