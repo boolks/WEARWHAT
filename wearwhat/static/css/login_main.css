@@ -58,7 +58,7 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
-  color: #57b846;
+  color: #fec810;
 }
 
 /*---------------------------------------------*/
@@ -251,7 +251,7 @@ iframe {
   top: -1px;
   left: -1px;
   pointer-events: none;
-  border: 1px solid #57b846;
+  border: 1px solid #fec810;
   border-radius: 3px;
 
   visibility: hidden;
@@ -315,11 +315,11 @@ iframe {
 }
 
 .btn-show-pass:hover {
-  color: #57b846;
+  color: #fec810;
 }
 
 .btn-show-pass.active {
-  color: #57b846;
+  color: #fec810;
 }
 
 /*==================================================================
@@ -370,7 +370,7 @@ iframe {
 }
 
 .input-checkbox100:checked + .label-checkbox100::before {
-  color: #57b846;
+  color: #fec810;
 }
 
 
@@ -412,7 +412,7 @@ iframe {
 }
 
 .login100-form-btn:hover {
-  background-color: #57b846;
+  background-color: #fec810;
 }
 
 
@@ -479,6 +479,18 @@ iframe {
   visibility: visible;
   opacity: 1;
 }
+
+::-webkit-scrollbar { width: 5.2px; height: 6.2px } /* 스크롤 바 */
+
+::-webkit-scrollbar-track { background-color:#fff; } /* 스크롤 바 밑의 배경 */
+
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; } /* 실질적 스크롤 바 */
+
+::-webkit-scrollbar-thumb:hover { background: #404040; } /* 실질적 스크롤 바 위에 마우스를 올려다 둘 때 */
+
+::-webkit-scrollbar-thumb:active { background: #808080; } /* 실질적 스크롤 바를 클릭할 때 */
+
+::-webkit-scrollbar-button { display: none; } /* 스크롤 바 상 하단 버튼 */
 
 @media (max-width: 992px) {
   .alert-validate::before {

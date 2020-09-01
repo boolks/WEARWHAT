@@ -21,20 +21,23 @@
             {% if weather == "storm" %}
                 <i class="fas fa-poo-storm"></i>
             {% endif %}
-            <h1 class="temperature" style="display: inline-block">지금 서울은 {{ temp }}</h1>
+            <h1 class="temperature" style="display: inline-block">지금 서울은 {{ temp }} </h1>
             <h3 style="display: inline-block">℃</h3>
             <h1><b>{% if user.fav_style == 'CASUAL' %}캐주얼{% else %}포멀{% endif %}</b> 스타일을 선호하는
                 <b>{% if user.gender == 'W'%}<b>여성{% else %}남성{% endif %}</b><br> <b>{{ user.username }}</b>님을 위한 날씨 기반 추천 목록입니다</h1>
         </div>
         <div class="recommend">
-            <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">추천 받기</a></button>
+            <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">옵션 변경</a></button>
             <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'my_choice' %}">내가 저장한 옷</a></button><br><br>
-            <h3>Top 5</h3>
-            <button type="button" class="week_btn" style="background-color: transparent; border: solid 1px transparent;"><a href=""></a>주 간</button>
-                <button type="button" class="month_btn" style="background-color: transparent; border: solid 1px transparent"><a href=""></a>월 간</button>
-
+            <div class="nav_btn">
+                <h3>Best 5</h3>
+                <button type="button" class="random_btn active"><a href=""></a>오늘의 추천</button>
+                <button type="button" class="week_btn"><a href=""></a>주 간</button>
+                <button type="button" class="month_btn"><a href=""></a>월 간</button>
+            </div>
 
             <!-- 상의 -->
+            <p class="bestFive" style="opacity:0.7; font-size:30px;text-align: left; margin: 45px 75px 40px; ">오늘의 추천</p>
             <p class="list_title">　상의</p>
             <div class="top_list">
                 <table>
@@ -47,7 +50,7 @@
                                             <img src="{{ clo.image }}" class="list__img">
                                         </a>
                                     </figure>
-                                    <span>구매</span>
+                                    <span>상세 보기</span>
                                 </div>
                             </div>
 
@@ -82,7 +85,7 @@
                                             <img src="{{ clo.image }}" class="list__img">
                                         </a>
                                     </figure>
-                                    <span>구매</span>
+                                    <span>상세 보기</span>
                                 </div>
                             </div>
 
@@ -117,7 +120,7 @@
                                             <img src="{{ clo.image }}" class="list__img">
                                         </a>
                                     </figure>
-                                    <span>구매</span>
+                                    <span>상세 보기</span>
                                 </div>
                             </div>
 
@@ -154,7 +157,7 @@
                                             <img src="{{ clo.image }}" class="list__img">
                                         </a>
                                     </figure>
-                                    <span>구매</span>
+                                    <span>상세 보기</span>
                                 </div>
                             </div>
                             {% if user in clo.under_like_users.all %}
@@ -162,13 +165,6 @@
                             {% else %}
                                 <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
                             {% endif %}
-    {#                                <a href="{% url 'under_like'  under_id=clo.id %}">#}
-    {#                                    {% if user in clo.under_like_users.all %}#}
-    {#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
-    {#                                    {% else %}#}
-    {#                                        <a href="{% url 'under_like' under_id=clo.id %}"><i class="far fa-heart"></i></a>#}
-    {#                                    {% endif %}#}
-    {#                                </a>#}
                             <!--좋아요 갯수 카운트-->
                             <p class="card-text" id="under_count-{{ clo.id }}">
                                 {{ clo.under_like_users.count }} 명이 좋아합니다.
@@ -181,6 +177,74 @@
                 </table>
             </div>
 
+            <div class="weekly_under_list" style="display: none">
+                <table>
+                    {% for clo in weekly_under %}
+                        <td id="fade-in-bottom">
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>상세 보기</span>
+                                </div>
+                            </div>
+
+                            <div class="like">
+                                {% if user in clo.under_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="under_count-{{ clo.id }}">
+                                    {{ clo.under_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="monthly_under_list" style="display: none">
+                <table>
+                    {% for clo in monthly_under %}
+                        <td id="fade-in-bottom">
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>상세 보기</span>
+                                </div>
+                            </div>
+
+                            <div class="like">
+                                {% if user in clo.under_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="under_like" cid="{{ clo.id }}"><i id="under_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="top_count-{{ clo.id }}">
+                                    {{ clo.under_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+
+                    {% endfor %}
+                </table>
+            </div>
             <!-- 신발 -->
             <p class="list_title">　신발</p>
             <div class="shoes_list">
@@ -194,7 +258,7 @@
                                             <img src="{{ clo.image }}" class="list__img">
                                         </a>
                                     </figure>
-                                    <span>구매</span>
+                                    <span>상세 보기</span>
                                 </div>
                             </div>
                             {% if user in clo.shoes_like_users.all %}
@@ -202,13 +266,6 @@
                             {% else %}
                                 <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
                             {% endif %}
-    {#                                <a href="{% url 'shoes_like'  shoes_id=clo.id %}">#}
-    {#                                    {% if user in clo.shoes_like_users.all %}#}
-    {#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="fas fa-heart"></i></a>#}
-    {#                                    {% else %}#}
-    {#                                        <a href="{% url 'shoes_like' shoes_id=clo.id %}"><i class="far fa-heart"></i></a>#}
-    {#                                    {% endif %}#}
-    {#                                </a>#}
                             <!--좋아요 갯수 카운트-->
                             <p class="card-text" id="shoes_count-{{ clo.id }}">
                                 {{ clo.shoes_like_users.count }} 명이 좋아합니다.
@@ -217,6 +274,74 @@
                                 <p> {{ clo.title }} </p>
                             </div>
                         </td>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="weekly_shoes_list" style="display: none">
+                <table>
+                    {% for clo in weekly_shoes %}
+                        <td id="fade-in-bottom">
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>상세 보기</span>
+                                </div>
+                            </div>
+
+                            <div class="like">
+                                {% if user in clo.shoes_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="shoes_count-{{ clo.id }}">
+                                    {{ clo.shoes_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="monthly_shoes_list" style="display: none">
+                <table>
+                    {% for clo in monthly_shoes %}
+                        <td id="fade-in-bottom">
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>상세 보기</span>
+                                </div>
+                            </div>
+
+                            <div class="like">
+                                {% if user in clo.shoes_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="shoes_like" cid="{{ clo.id }}"><i id="shoes_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="top_count-{{ clo.id }}">
+                                    {{ clo.shoes_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+
                     {% endfor %}
                 </table>
             </div>
@@ -304,17 +429,51 @@
                 }
             });
         });
-        $('.week_btn').click(function(){
-            $('.list_title').text('{{ last_week }} ~ {{ week }}동안 가장 많은 좋아요를 받은 상의입니다.');
-            $('.weekly_top_list').show();
+        $('.random_btn').click(function(){
+            $('.bestFive').text('오늘의 추천');
+
+            $('.top_list').show();
+            $('.under_list').show();
+            $('.shoes_list').show();
+
             $('.monthly_top_list').hide();
-            $('.top_list').hide();
-        });
-        $('.month_btn').click(function(){
-            $('.list_title').text('한 달 동안 가장 많은 좋아요를 받은 상의입니다.');
-            $('.monthly_top_list').show();
+            $('.monthly_under_list').hide();
+            $('.monthly_shoes_list').hide();
+
             $('.weekly_top_list').hide();
+            $('.weekly_under_list').hide();
+            $('.weekly_shoes_list').hide();
+        });
+
+        $('.week_btn').click(function(){
+            $('.bestFive').text('{{ last_week }} ~ {{ week }}동안 가장 많은 좋아요를 받은 옷');
+
+            $('.weekly_top_list').show();
+            $('.weekly_under_list').show();
+            $('.weekly_shoes_list').show();
+
+            $('.monthly_top_list').hide();
+            $('.monthly_under_list').hide();
+            $('.monthly_shoes_list').hide();
+
             $('.top_list').hide();
+            $('.under_list').hide();
+            $('.shoes_list').hide();
+        });
+
+        $('.month_btn').click(function(){
+            $('.bestFive').text('한 달 동안 가장 많은 좋아요를 받은 옷');
+            $('.monthly_top_list').show();
+            $('.monthly_under_list').show();
+            $('.monthly_shoes_list').show();
+
+            $('.weekly_top_list').hide();
+            $('.weekly_under_list').hide();
+            $('.weekly_shoes_list').hide();
+
+            $('.top_list').hide();
+            $('.under_list').hide();
+            $('.shoes_list').hide();
         });
     </script>
 {% endblock %}
