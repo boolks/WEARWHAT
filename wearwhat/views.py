@@ -442,6 +442,8 @@ def item_save(request):
         shoes_item.shoes_save.add(request.user)
         request.user.like_shoes.add(shoes_id)
 
+    print(top_id, under_id, shoes_id)
+
     context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id, 'check':check}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
