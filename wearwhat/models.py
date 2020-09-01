@@ -53,7 +53,7 @@ class Top(models.Model):
 class TopLikes(models.Model):
     like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     top_like = models.ForeignKey(Top, on_delete=models.CASCADE)
-    like_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    likedate = models.DateTimeField(null=True, blank=True, auto_now_add=True)
 
     class Meta:
         managed = False

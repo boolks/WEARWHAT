@@ -24,7 +24,10 @@ urlpatterns = [
     path('under_choice', views.under_choice, name='under_choice'),
     path('shoes_choice', views.shoes_choice, name='shoes_choice'),
     path('item_save', views.item_save, name='item_save'),
-    path('my_choice', views.My_choice.as_view(), name='my_choice')
+    path('my_choice', views.My_choice.as_view(), name='my_choice'),
+    path('top_remove', views.top_remove, name='top_remove'),
+    path('under_remove', views.under_remove, name='under_remove'),
+    path('shoes_remove', views.shoes_remove, name='shoes_remove'),
     # localhost:8000/
     # path('main/', views.style_recommend, name='style_recommend'),
 ]
