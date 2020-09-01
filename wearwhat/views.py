@@ -434,13 +434,13 @@ def item_save(request):
         check = False
     else:
         under_item.under_save.add(request.user)
-        request.user.like_under.add(under_id)
+        request.user.liked_under.add(under_id)
 
     if request.user in shoes_item.shoes_save.all():
         check = False
     else:
         shoes_item.shoes_save.add(request.user)
-        request.user.like_shoes.add(shoes_id)
+        request.user.liked_shoes.add(shoes_id)
 
     print(top_id, under_id, shoes_id)
 
@@ -464,9 +464,9 @@ class My_choice(View):
 
             for i in current_user.liked_top.filter().values_list('id', flat=True):
                 top_list.append(i)
-            for i in current_user.like_under.filter().values_list('id', flat=True):
+            for i in current_user.liked_under.filter().values_list('id', flat=True):
                 under_list.append(i)
-            for i in current_user.like_shoes.filter().values_list('id', flat=True):
+            for i in current_user.liked_shoes.filter().values_list('id', flat=True):
                 shoes_list.append(i)
 
             cloth_top = Top.objects.filter(id__in=top_list)
@@ -499,7 +499,7 @@ def under_remove(request):
     print(under_id)
     if request.user in item.under_save.all():
         item.under_save.remove(request.user)
-        request.user.like_under.remove(under_id)
+        request.user.liked_under.remove(under_id)
 
     context = {'under_id': under_id}
     return HttpResponse(json.dumps(context), content_type="application/json")
@@ -511,7 +511,7 @@ def shoes_remove(request):
 
     if request.user in item.shoes_save.all():
         item.shoes_save.remove(request.user)
-        request.user.like_shoes.remove(shoes_id)
+        request.user.liked_shoes.remove(shoes_id)
 
     context = {'shoes_id': shoes_id}
 
