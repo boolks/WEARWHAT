@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
+from .matplotlib import matplotlib_graph
 
 import datetime
 import random
@@ -88,6 +89,8 @@ class SignUp(generic.CreateView):
 # 옷 추천 메인페이지
 class Main_page(View):
     template_name = 'wearwhat/main.html'
+
+    matplotlib_graph()
 
     # 화면 뿌리기
     def get(self, request):
