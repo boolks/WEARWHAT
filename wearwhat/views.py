@@ -8,11 +8,12 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
 from django.contrib import auth
-from django.db.models.functions import ExtractMonth, ExtractDay
+from dateutil.relativedelta import relativedelta
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes, UnderLikes
 
+import datetime
 import random
 import json
 from pyowm import OWM
@@ -102,18 +103,39 @@ class Main_page(View):
             else:
                 gender = '여'
 
-            today = datetime.date.today()
+            now = datetime.datetime.now()
+            week = now + datetime.timedelta(weeks=1)
+            last_week = now + datetime.timedelta(weeks=-1)
+            month = now + relativedelta(months=1)
+            last_month = now + relativedelta(months=-1)
 
-            aweek = today - datetime.timedelta(7)
-            amonth = today - datetime.timedelta(30)
+            # 주간 옷 top 5
+            cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+                            .filter(Q(toplikes__likedate__gte=last_week)&Q(toplikes__likedate__lte=week)).\
+                            annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+                              .filter(Q(underlikes__likedate__gte=last_week)&Q(underlikes__likedate__lte=week))\
+                              .annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+                              .filter(Q(shoeslikes__likedate__gte=last_week)&Q(shoeslikes__likedate__lte=week))\
+                              .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
 
+            # 월간 옷 top 5
+            # cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            # .filter(Q(toplikes__likedate__gte=last_month)&Q(toplikes__likedate__lte=month))\
+            # .annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            # cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            # .filter(Q(underlikes__likedate__gte=last_month)&Q(underlikes__likedate__lte=month))\
+            # .annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            # cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            # .filter(Q(shoeslikes__likedate__gte=last_month)&Q(shoeslikes__likedate__lte=month))\
+            # .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
 
-            cloth_top = Top.objects.filter(gender=gender).annotate(count=Count('top_like_users')).filter(toplikes__like_date__range=(amonth, today)).order_by('-count')[:5]
-            cloth_under = Under.objects.filter(gender=gender).annotate(count=Count('under_like_users')).filter(underlikes__like_date__range=(amonth, today)).order_by('-count')[:5]
-            cloth_shoes = Shoes.objects.filter(gender=gender).annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+            # 옷 랜덤 5개 출력
             # cloth_top = Top.objects.filter(id__in=get_random_Top(request))
             # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
             # cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
+
 
             return render(request, self.template_name,
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
@@ -394,26 +416,29 @@ def item_save(request):
     top_item = get_object_or_404(Top, id=top_id)
     under_item = get_object_or_404(Under, id=under_id)
     shoes_item = get_object_or_404(Shoes, id=shoes_id)
+    check = True
 
     if request.user in top_item.top_save.all():
-        print("already exists")
+        check = False
     else:
         top_item.top_save.add(request.user)
         request.user.liked_top.add(top_id)
 
     if request.user in under_item.under_save.all():
-        print("already exists")
+        check = False
     else:
         under_item.under_save.add(request.user)
         request.user.like_under.add(under_id)
 
     if request.user in shoes_item.shoes_save.all():
-        print("already exists")
+        check = False
     else:
         shoes_item.shoes_save.add(request.user)
         request.user.like_shoes.add(shoes_id)
 
-    context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id}
+    print(check)
+
+    context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id, 'check':check}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -446,6 +471,45 @@ class My_choice(View):
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
         else:
             return render(request, 'wearwhat/index.html')
+
+
+def top_remove(request):
+    # html로 부터 top_id를 받아옴
+    top_id = request.POST.get('top_id', None)
+    item = get_object_or_404(Top, id=top_id)
+
+    if request.user in item.top_save.all():
+        item.top_save.remove(request.user)
+        request.user.liked_top.remove(top_id)
+
+    context = {'top_id': top_id}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+def under_remove(request):
+    # html로 부터 top_id를 받아옴
+    under_id = request.POST.get('under_id', None)
+    item = get_object_or_404(Under, id=under_id)
+    print(under_id)
+    if request.user in item.under_save.all():
+        item.under_save.remove(request.user)
+        request.user.like_under.remove(under_id)
+
+    context = {'under_id': under_id}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+def shoes_remove(request):
+    # html로 부터 top_id를 받아옴
+    shoes_id = request.POST.get('shoes_id', None)
+    item = get_object_or_404(Shoes, id=shoes_id)
+
+    if request.user in item.shoes_save.all():
+        item.shoes_save.remove(request.user)
+        request.user.like_shoes.remove(shoes_id)
+
+    context = {'shoes_id': shoes_id}
+
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 def logout(request):
     auth.logout(request)

@@ -53,7 +53,7 @@ class Top(models.Model):
 class TopLikes(models.Model):
     like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     top_like = models.ForeignKey(Top, on_delete=models.CASCADE)
-    like_date = models.DateField(null=True, blank=True, auto_now_add=True)
+    likedate = models.DateField(auto_now=True)
 
     class Meta:
         managed = False
@@ -85,7 +85,7 @@ class Under(models.Model):
 class UnderLikes(models.Model):
     like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     under_like = models.ForeignKey(Under, on_delete=models.CASCADE)
-    like_date = models.DateField(null=True, blank=True, auto_now_add=True)
+    likedate = models.DateField(auto_now=True)
 
     class Meta:
         managed = False
@@ -117,7 +117,7 @@ class Shoes(models.Model):
 class ShoesLikes(models.Model):
     like_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     shoes_like = models.ForeignKey(Shoes, on_delete=models.CASCADE)
-    like_date = models.DateField(null=True, blank=True, auto_now_add=True)
+    likedate = models.DateField(auto_now=True)
 
     class Meta:
         managed = False
