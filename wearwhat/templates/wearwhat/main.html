@@ -305,13 +305,13 @@
             });
         });
         $('.week_btn').click(function(){
-            $('.list_title').text('주간');
+            $('.list_title').text('{{ last_week }} ~ {{ week }}동안 가장 많은 좋아요를 받은 상의입니다.');
             $('.weekly_top_list').show();
             $('.monthly_top_list').hide();
             $('.top_list').hide();
         });
         $('.month_btn').click(function(){
-            $('.list_title').text('월간');
+            $('.list_title').text('한 달 동안 가장 많은 좋아요를 받은 상의입니다.');
             $('.monthly_top_list').show();
             $('.weekly_top_list').hide();
             $('.top_list').hide();
