@@ -95,7 +95,7 @@
                 </div>
             </div>
 
-            <div class="aside">
+            <div id="save_list" class="aside">
                 <!-- 추천 1 상의, 하의-->
                 <div id="recommend_list__img">
                     <img class="top_result_img" src="https://via.placeholder.com/300">
@@ -234,12 +234,18 @@
                url: "{% url 'item_save' %}",
                data: {'top_id': top, 'under_id':under, 'shoes_id':shoes,  'csrfmiddlewaretoken': '{{ csrf_token }}'},
                success: function(response){
-                   alert('선택하신 옷으로 저장을 완료하였습니다.');
+                   if(response.check == false){
+                       alert("이미 저장된 옷이 있습니다.")
+                   }
+                   else{
+                       alert('선택하신 옷으로 저장을 완료하였습니다.');
+                   }
                },
                 error:function(request, status, error){
                    alert('실패');
                 }
             });
+            $('#save_list').load(location.href + ' #save_list');
         });
     </script>
 

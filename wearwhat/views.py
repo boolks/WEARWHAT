@@ -107,6 +107,7 @@ class Main_page(View):
             # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
             # cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
+
             return render(request, self.template_name,
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
         else:
@@ -386,26 +387,29 @@ def item_save(request):
     top_item = get_object_or_404(Top, id=top_id)
     under_item = get_object_or_404(Under, id=under_id)
     shoes_item = get_object_or_404(Shoes, id=shoes_id)
+    check = True
 
     if request.user in top_item.top_save.all():
-        print("already exists")
+        check = False
     else:
         top_item.top_save.add(request.user)
         request.user.liked_top.add(top_id)
 
     if request.user in under_item.under_save.all():
-        print("already exists")
+        check = False
     else:
         under_item.under_save.add(request.user)
         request.user.like_under.add(under_id)
 
     if request.user in shoes_item.shoes_save.all():
-        print("already exists")
+        check = False
     else:
         shoes_item.shoes_save.add(request.user)
         request.user.like_shoes.add(shoes_id)
 
-    context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id}
+    print(check)
+
+    context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id, 'check':check}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -438,6 +442,45 @@ class My_choice(View):
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
         else:
             return render(request, 'wearwhat/index.html')
+
+
+def top_remove(request):
+    # html로 부터 top_id를 받아옴
+    top_id = request.POST.get('top_id', None)
+    item = get_object_or_404(Top, id=top_id)
+
+    if request.user in item.top_save.all():
+        item.top_save.remove(request.user)
+        request.user.liked_top.remove(top_id)
+
+    context = {'top_id': top_id}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+def under_remove(request):
+    # html로 부터 top_id를 받아옴
+    under_id = request.POST.get('under_id', None)
+    item = get_object_or_404(Under, id=under_id)
+    print(under_id)
+    if request.user in item.under_save.all():
+        item.under_save.remove(request.user)
+        request.user.like_under.remove(under_id)
+
+    context = {'under_id': under_id}
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+def shoes_remove(request):
+    # html로 부터 top_id를 받아옴
+    shoes_id = request.POST.get('shoes_id', None)
+    item = get_object_or_404(Shoes, id=shoes_id)
+
+    if request.user in item.shoes_save.all():
+        item.shoes_save.remove(request.user)
+        request.user.like_shoes.remove(shoes_id)
+
+    context = {'shoes_id': shoes_id}
+
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 def logout(request):
     auth.logout(request)
