@@ -2,15 +2,16 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-    <div class="page-header">
     <button type="button" id="logout_btn" class="btn btn-outline-secondary" style="margin-right: 15px"><a href="{% url 'logout' %}?next={{ request.path }}">로그아웃</a></button>
-    <button type="button" id="main_btn" class="btn btn-dark btn-lg"><a href="{% url 'main_page' %}">메인으로</a></button>
+    <div class="page-header" style="padding: 45px">
+        <h3>저장한 옷 목록입니다 (●'◡'●)</h3>
+        <button type="button" id="main_btn" class="btn btn-dark btn-lg" style="margin-top: 30px"><a href="{% url 'main_page' %}">메인으로</a></button>
     </div>
         <section id="recommend">
-            <div class="recommend">
+            <div class="recommend" style="margin-top: 100px">
                 <!-- 상의 -->
                 <p class="list_title">　상의</p>
-                <div class="top_list">
+                <div class="top_list" style="overflow-x:scroll; height: 524px; white-space:nowrap; margin-bottom: 100px;">
                     <table>
                         {% for clo in top %}
                             <td id="fade-in-bottom">
@@ -39,7 +40,7 @@
 
                 <!-- 하의 -->
                 <p class="list_title">　하의</p>
-                <div class="under_list">
+                <div class="under_list" style="overflow-x:scroll; height: 524px; white-space:nowrap; margin-bottom: 100px;">
                     <table>
                         {% for clo in under %}
                             <td id="fade-in-bottom">
@@ -66,7 +67,7 @@
 
                 <!-- 신발 -->
                 <p class="list_title">　신발</p>
-                <div class="shoes_list">
+                <div class="shoes_list" style="overflow-x:scroll; height: 524px; white-space:nowrap; margin-bottom: 100px;">
                     <table>
                         {% for clo in shoes %}
                             <td id="fade-in-bottom">

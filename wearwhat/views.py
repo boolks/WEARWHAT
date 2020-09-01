@@ -139,7 +139,6 @@ class Main_page(View):
             cloth_under = Under.objects.filter(id__in=get_random_Under(request))
             cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
-
             return render(request, self.template_name,
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes,\
                            'weekly_top':weekly_cloth_top, 'weekly_under':weekly_cloth_under, 'weekly_shoes':weekly_cloth_shoes,\
