@@ -8,10 +8,12 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
 from django.contrib import auth
+from dateutil.relativedelta import relativedelta
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
 
+import datetime
 import random
 import json
 from pyowm import OWM
@@ -100,9 +102,35 @@ class Main_page(View):
             else:
                 gender = '여'
 
-            cloth_top = Top.objects.filter(gender=gender).annotate(count=Count('top_like_users')).order_by('-count')[:5]
-            cloth_under = Under.objects.filter(gender=gender).annotate(count=Count('under_like_users')).order_by('-count')[:5]
-            cloth_shoes = Shoes.objects.filter(gender=gender).annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+            now = datetime.datetime.now()
+            week = now + datetime.timedelta(weeks=1)
+            last_week = now + datetime.timedelta(weeks=-1)
+            month = now + relativedelta(months=1)
+            last_month = now + relativedelta(months=-1)
+
+            # 주간 옷 top 5
+            cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+                            .filter(Q(toplikes__likedate__gte=last_week)&Q(toplikes__likedate__lte=week)).\
+                            annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+                              .filter(Q(underlikes__likedate__gte=last_week)&Q(underlikes__likedate__lte=week))\
+                              .annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+                              .filter(Q(shoeslikes__likedate__gte=last_week)&Q(shoeslikes__likedate__lte=week))\
+                              .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+
+            # 월간 옷 top 5
+            # cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            # .filter(Q(toplikes__likedate__gte=last_month)&Q(toplikes__likedate__lte=month))\
+            # .annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            # cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            # .filter(Q(underlikes__likedate__gte=last_month)&Q(underlikes__likedate__lte=month))\
+            # .annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            # cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            # .filter(Q(shoeslikes__likedate__gte=last_month)&Q(shoeslikes__likedate__lte=month))\
+            # .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+
+            # 옷 랜덤 5개 출력
             # cloth_top = Top.objects.filter(id__in=get_random_Top(request))
             # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
             # cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
