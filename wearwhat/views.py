@@ -90,9 +90,6 @@ class SignUp(generic.CreateView):
 # 옷 추천 메인페이지
 class Main_page(View):
     template_name = 'wearwhat/main.html'
-
-    matplotlib_graph()
-
     # 화면 뿌리기
     def get(self, request):
         current_user = request.user
@@ -113,35 +110,38 @@ class Main_page(View):
             last_month = now + relativedelta(months=-1)
 
             # 주간 옷 top 5
-            cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            weekly_cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
                             .filter(Q(toplikes__likedate__gte=last_week)&Q(toplikes__likedate__lte=week)).\
                             annotate(count=Count('top_like_users')).order_by('-count')[:5]
-            cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            weekly_cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
                               .filter(Q(underlikes__likedate__gte=last_week)&Q(underlikes__likedate__lte=week))\
                               .annotate(count=Count('under_like_users')).order_by('-count')[:5]
-            cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            weekly_cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
                               .filter(Q(shoeslikes__likedate__gte=last_week)&Q(shoeslikes__likedate__lte=week))\
                               .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
 
             # 월간 옷 top 5
-            # cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            # .filter(Q(toplikes__likedate__gte=last_month)&Q(toplikes__likedate__lte=month))\
-            # .annotate(count=Count('top_like_users')).order_by('-count')[:5]
-            # cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            # .filter(Q(underlikes__likedate__gte=last_month)&Q(underlikes__likedate__lte=month))\
-            # .annotate(count=Count('under_like_users')).order_by('-count')[:5]
-            # cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            # .filter(Q(shoeslikes__likedate__gte=last_month)&Q(shoeslikes__likedate__lte=month))\
-            # .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
+            monthly_cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            .filter(Q(toplikes__likedate__gte=last_month)&Q(toplikes__likedate__lte=month))\
+            .annotate(count=Count('top_like_users')).order_by('-count')[:5]
+            monthly_cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            .filter(Q(underlikes__likedate__gte=last_month)&Q(underlikes__likedate__lte=month))\
+            .annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            monthly_cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
+            .filter(Q(shoeslikes__likedate__gte=last_month)&Q(shoeslikes__likedate__lte=month))\
+            .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
 
             # 옷 랜덤 5개 출력
-            # cloth_top = Top.objects.filter(id__in=get_random_Top(request))
-            # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
-            # cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
+            cloth_top = Top.objects.filter(id__in=get_random_Top(request))
+            cloth_under = Under.objects.filter(id__in=get_random_Under(request))
+            cloth_shoes = Shoes.objects.filter(id__in=get_random_Shoes(request))
 
 
             return render(request, self.template_name,
-                          {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'temp': temp, 'weather': weather})
+                          {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes,\
+                           'weekly_top':weekly_cloth_top, 'weekly_under':weekly_cloth_under, 'weekly_shoes':weekly_cloth_shoes,\
+                           'monthly_top':monthly_cloth_top, 'monthly_under':monthly_cloth_under, 'monthly_shoes':monthly_cloth_shoes,\
+                           'temp': temp, 'weather': weather})
         else:
             return render(request, 'wearwhat/index.html')
 

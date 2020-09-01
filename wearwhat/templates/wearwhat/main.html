@@ -71,6 +71,76 @@
                 </table>
             </div>
 
+            <div class="weekly_top_list" style="display: none">
+                <table>
+                    {% for clo in weekly_top %}
+                        <td id="fade-in-bottom">
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>구매</span>
+                                </div>
+                            </div>
+
+                            <div class="like">
+                                {% if user in clo.top_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="top_count-{{ clo.id }}">
+                                    {{ clo.top_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="monthly_top_list" style="display: none">
+                <table>
+                    {% for clo in monthly_top %}
+                        <td id="fade-in-bottom">
+                            <div class="hover column">
+                                <div>
+                                    <figure>
+                                        <a class="clo_url" href="{{ clo.url }}" target="_blank">
+                                            <img src="{{ clo.image }}" class="list__img">
+                                        </a>
+                                    </figure>
+                                    <span>구매</span>
+                                </div>
+                            </div>
+
+                            <div class="like">
+                                {% if user in clo.top_like_users.all %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" style="background-color:transparent;  border:0px transparent solid; font-size: 18px;" class="top_like" cid="{{ clo.id }}"><i id="top_ico-{{ clo.id }}" class="far fa-heart"></i></button>
+                                {% endif %}
+                                <!--좋아요 갯수 카운트-->
+                                <p class="card-text" id="top_count-{{ clo.id }}">
+                                    {{ clo.top_like_users.count }} 명이 좋아합니다.
+                                </p>
+                            </div>
+                            <div class="list__description">
+                                <p> {{ clo.title }} </p>
+                            </div>
+                        </td>
+
+                    {% endfor %}
+                </table>
+            </div>
+
             <!-- 하의 -->
             <p class="list_title">　하의</p>
             <div class="under_list">
@@ -233,6 +303,18 @@
                     alert('실패');
                 }
             });
+        });
+        $('.week_btn').click(function(){
+            $('.list_title').text('주간');
+            $('.weekly_top_list').show();
+            $('.monthly_top_list').hide();
+            $('.top_list').hide();
+        });
+        $('.month_btn').click(function(){
+            $('.list_title').text('월간');
+            $('.monthly_top_list').show();
+            $('.weekly_top_list').hide();
+            $('.top_list').hide();
         });
     </script>
 {% endblock %}
