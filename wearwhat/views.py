@@ -8,13 +8,15 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
 from django.contrib import auth
+from django.db.models.functions import ExtractMonth, ExtractDay
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
-from .models import Top, Under, Shoes
+from .models import Top, Under, Shoes, UnderLikes
 
 import random
 import json
 from pyowm import OWM
+import datetime
 
 user = get_user_model()
 
@@ -34,7 +36,7 @@ def get_temperature():
 temp, weather = get_temperature()
 weather = weather.lower()
 # print('온도:', temp)
-print('날씨:', weather)
+# print('날씨:', weather)
 
 
 
@@ -100,8 +102,14 @@ class Main_page(View):
             else:
                 gender = '여'
 
-            cloth_top = Top.objects.filter(gender=gender).annotate(count=Count('top_like_users')).order_by('-count')[:5]
-            cloth_under = Under.objects.filter(gender=gender).annotate(count=Count('under_like_users')).order_by('-count')[:5]
+            today = datetime.date.today()
+
+            aweek = today - datetime.timedelta(7)
+            amonth = today - datetime.timedelta(30)
+
+
+            cloth_top = Top.objects.filter(gender=gender).annotate(count=Count('top_like_users')).filter(toplikes__like_date__range=(amonth, today)).order_by('-count')[:5]
+            cloth_under = Under.objects.filter(gender=gender).annotate(count=Count('under_like_users')).filter(underlikes__like_date__range=(amonth, today)).order_by('-count')[:5]
             cloth_shoes = Shoes.objects.filter(gender=gender).annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
             # cloth_top = Top.objects.filter(id__in=get_random_Top(request))
             # cloth_under = Under.objects.filter(id__in=get_random_Under(request))
@@ -136,9 +144,9 @@ class Main_page(View):
 # 상의 랜덤출력 함수
 def get_random_Top(request):
     top_id_list = []
-    
+
     current_user = request.user
-    
+
     style = current_user.fav_style
     if style == 'FORMAL':
         style = '포멀'
@@ -178,15 +186,15 @@ def get_random_Top(request):
 # 하의 랜덤출력 함수
 def get_random_Under(request):
     under_id_list = []
-    
+
     current_user = request.user
-    
+
     style = current_user.fav_style
     if style == 'FORMAL':
         style = '포멀'
     elif style == 'CASUAL':
         style = '캐주얼'
-        
+
     gender = current_user.gender
     if gender == 'M':
         gender = '남'
@@ -215,9 +223,9 @@ def get_random_Under(request):
 # 신발 랜덤출력 함수
 def get_random_Shoes(request):
     shoes_id_list = []
-    
+
     current_user = request.user
-    
+
     style = current_user.fav_style
     if style == 'FORMAL':
         style = '포멀'
