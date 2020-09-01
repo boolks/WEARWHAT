@@ -29,7 +29,7 @@
                                     {{ clo.top_like_users.count }} 명이 좋아합니다.
                                 </p>
                                 <div class="list__description">
-                                    <p> {{ clo.title }} </p>
+                                    <p> {{ clo.id }} {{ clo.title }} </p>
                                 </div>
                                 <div>
                                     <button type="submit" class="btn btn-light top_choice" top_id="{{ clo.id }}">선택</button>
@@ -57,7 +57,7 @@
                                     {{ clo.under_like_users.count }} 명이 좋아합니다.
                                 </p>
                                 <div class="list__description">
-                                    <p> {{ clo.title }} </p>
+                                    <p> {{ clo.id }} {{ clo.title }} </p>
                                 </div>
                                 <div>
                                     <button type="submit" class="btn btn-light under_choice" under_id="{{ clo.id }}">선택</button>
@@ -84,7 +84,7 @@
                                     {{ clo.shoes_like_users.count }} 명이 좋아합니다.
                                 </p>
                                 <div class="list__description">
-                                    <p> {{ clo.title }} </p>
+                                    <p> {{ clo.id }} {{ clo.title }} </p>
                                 </div>
                                 <div>
                                     <button type="submit" class="btn btn-light shoes_choice" shoes_id="{{ clo.id }}">선택</button>
@@ -99,12 +99,15 @@
                 <!-- 추천 1 상의, 하의-->
                 <div id="recommend_list__img">
                     <img class="top_result_img" src="../../static/images/top_holder.png">
+                    <input type="hidden" class="top_save" value="">
                 </div>
                 <div id="recommend_list__img">
                     <img class="under_result_img"  src="../../static/images/under_holder.png">
+                    <input type="hidden" class="under_save" value="">
                 </div>
                 <div id="recommend_list__img">
                     <img class="shoes_result_img"  src="../../static/images/shoes_holder.png">
+                    <input type="hidden" class="shoes_save" value="">
                 </div>
                 <button type="button" type="submit" id="main_btn" class="item_save btn-dark btn-lg">선택 리스트 저장하기</button>
             </div>
@@ -188,6 +191,7 @@
                 data: {'top_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
                     $('.top_result_img').attr('src', response.img)
+                    $('.top_save').attr('value', response.id)
                 },
                 error:function(request,status,error){
                     alert('실패');
@@ -203,6 +207,7 @@
                 data: {'under_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
                     $('.under_result_img').attr('src', response.img)
+                    $('.under_save').attr('value', response.id)
                 },
                 error:function(request,status,error){
                     alert('실패');
@@ -218,6 +223,7 @@
                 data: {'shoes_id': num, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                 success: function(response){ // 성공했을 때 호출할 콜백을 지정한다.
                     $('.shoes_result_img').attr('src', response.img)
+                    $('.shoes_save').attr('value', response.id)
                 },
                 error:function(request,status,error){
                     alert('실패');
@@ -226,9 +232,9 @@
         });
 
         $('.item_save').click(function(){
-            var top = $('.top_choice').attr('top_id')
-            var under = $('.under_choice').attr('under_id')
-            var shoes = $('.shoes_choice').attr('shoes_id')
+            var top = $('.top_save').attr('value')
+            var under = $('.under_save').attr('value')
+            var shoes = $('.shoes_save').attr('value')
             $.ajax({
                type: "POST",
                url: "{% url 'item_save' %}",

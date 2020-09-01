@@ -389,7 +389,7 @@ def top_choice(request):
 
     img = choice.image
 
-    context = {'img': img}
+    context = {'id':top_id, 'img':img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 # 하의 결과 선택
@@ -400,7 +400,7 @@ def under_choice(request):
 
     img = choice.image
 
-    context = {'img': img}
+    context = {'id':under_id, 'img':img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 # 신발 결과 선택
@@ -411,7 +411,7 @@ def shoes_choice(request):
 
     img = choice.image
 
-    context = {'img': img}
+    context = {'id':shoes_id, 'img':img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
@@ -441,8 +441,6 @@ def item_save(request):
     else:
         shoes_item.shoes_save.add(request.user)
         request.user.like_shoes.add(shoes_id)
-
-    print(check)
 
     context = {'top_id':top_id, 'under_id':under_id, 'shoes_id':shoes_id, 'check':check}
     return HttpResponse(json.dumps(context), content_type="application/json")
