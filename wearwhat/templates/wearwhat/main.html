@@ -24,7 +24,7 @@
             <h1 class="temperature" style="display: inline-block">지금 서울은 {{ temp }} </h1>
             <h3 style="display: inline-block">℃</h3>
             <h1><b>{% if user.fav_style == 'CASUAL' %}캐주얼{% else %}포멀{% endif %}</b> 스타일을 선호하는
-                <b>{% if user.gender == 'W'%}<b>여성{% else %}남성{% endif %}</b><br> <b>{{ user.username }}</b>님을 위한 날씨 기반 추천 목록입니다</h1>
+                <b>{% if user.gender == 'W'%}<b>여성{% else %}남성{% endif %}</b><br> <b>{{ user.name }}</b>님을 위한 날씨 기반 추천 목록입니다</h1>
         </div>
         <div class="recommend">
             <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">옵션 변경</a></button>
