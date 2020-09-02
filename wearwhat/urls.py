@@ -9,10 +9,6 @@ urlpatterns = [
     path('main', views.Main_page.as_view(), name='main_page'),
     path('login', views.login, name='login'),
 
-    # path('top/<int:top_id>', views.top_like, name='top_like'),
-    # path('under/<int:under_id>', views.under_like, name='under_like'),
-    # path('shoes/<int:shoes_id>', views.shoes_like, name='shoes_like'),
-
     # 위 경로와 같은데 값을 ajax 상에서 POST로 보내줌
     path('top_like', views.top_like, name='top_like'),
     path('under_like', views.under_like, name='under_like'),
@@ -24,10 +20,8 @@ urlpatterns = [
     path('under_choice', views.under_choice, name='under_choice'),
     path('shoes_choice', views.shoes_choice, name='shoes_choice'),
     path('item_save', views.item_save, name='item_save'),
-    path('my_choice', views.My_choice.as_view(), name='my_choice'),
+    path('my_choice', views.my_choice.as_view(), name='my_choice'),
     path('top_remove', views.top_remove, name='top_remove'),
     path('under_remove', views.under_remove, name='under_remove'),
     path('shoes_remove', views.shoes_remove, name='shoes_remove'),
-    # localhost:8000/
-    # path('main/', views.style_recommend, name='style_recommend'),
 ]

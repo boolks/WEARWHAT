@@ -183,6 +183,7 @@
             });
         });
 
+        {#마음에 드는 상의 하의 신발 선택#}
         $('.top_choice').click(function(){
             var num = $(this).attr('top_id')
             $.ajax({
@@ -231,6 +232,7 @@
             });
         });
 
+        {#선택 결과 저장#}
         $('.item_save').click(function(){
             var top = $('.top_save').attr('value')
             var under = $('.under_save').attr('value')

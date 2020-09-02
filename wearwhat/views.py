@@ -8,7 +8,6 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
 from django.contrib import auth
-from dateutil.relativedelta import relativedelta
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
@@ -29,16 +28,12 @@ def get_temperature():
     observation = mgr.weather_at_place('Seoul,KR')
     temp = observation.weather.temperature('celsius').get('temp')
     weather = observation.weather.status
-    # print('현재날씨: ', weather)
-    # print('현재온도: ', temperature)
     return temp, weather
 
 
+# 현재 날씨, 기온 가져오기
 temp, weather = get_temperature()
 weather = weather.lower()
-# print('온도:', temp)
-# print('날씨:', weather)
-
 
 
 # 로그인 전 메인페이지
@@ -52,10 +47,8 @@ def index_view(request):
     # 로그인 전 => index 페이지 / 로그인 완료 => main 페이지
     current_user = request.user
     if current_user.is_authenticated:
-        # return_url = reverse_lazy('main_page')
         return HttpResponseRedirect(reverse('main_page'))
     else:
-        # return_url = reverse_lazy('index_page')
         return render(request, 'wearwhat/index.html', {'cloth_count': cloth_count})
 
 
@@ -90,7 +83,6 @@ class SignUp(generic.CreateView):
 class Main_page(View):
 
     template_name = 'wearwhat/main.html'
-
     # matplotlib_graph()
 
     # 화면 뿌리기
@@ -106,16 +98,11 @@ class Main_page(View):
             else:
                 gender = '여'
 
-            week = datetime.datetime.today() - datetime.timedelta(days=datetime.datetime.today().isoweekday() % 7)
-            week = datetime.date(week.year, week.month, week.day)
-            last_week = datetime.datetime.today() - datetime.timedelta(days=datetime.datetime.today().isoweekday() % 7-1) - datetime.timedelta(weeks=1)
-            last_week = datetime.date(last_week.year, last_week.month, last_week.day)
-            last_month = datetime.datetime.today().replace(day=1) - datetime.timedelta(days=1)
-            last_month = datetime.date(last_month.year, last_month.month, last_month.day)
+            week = datetime.date.today() - datetime.timedelta(days=datetime.date.today().isoweekday() % 7)
+            last_week = datetime.date.today() - datetime.timedelta(days=datetime.date.today().isoweekday() % 7-1)\
+                        - datetime.timedelta(weeks=1)
+            last_month = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
             first_month = last_month.replace(day=1)
-            first_month = datetime.date(first_month.year, first_month.month, first_month.day)
-
-            print(week, last_week)
 
             # 주간 옷 top 5
             weekly_cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
@@ -153,21 +140,16 @@ class Main_page(View):
         else:
             return render(request, 'wearwhat/index.html')
 
+
     # 요청받기
     def post(self, request, *args, **kwargs):
         # 폼 뿌리기
-        # form = ChangeOptionForm()
         # 선택 변경 폼
         if request.method == 'POST':
             form = ChangeOptionForm(request.POST)
             # 폼 입력 후 처리 어떻게될지
             if form.is_valid():
                 pass
-                # cloth_top = Top.objects.filter(id__in=self.get_random_Top(request))
-                # cloth_under = Under.objects.filter(id__in=self.get_random_Under(request))
-                # cloth_shoes = Shoes.objects.filter(id__in=self.get_random_Shoes(request))
-                # post = form.save(commit=False)
-                # return redirect('main_page', pk=post.pk)
         else:
             form = ChangeOptionForm()
 
@@ -280,6 +262,7 @@ def get_random_Shoes(request):
     shoes_random = random.sample(shoes_id_list, 5)
     return shoes_random
 
+
 # 상의 좋아요
 def top_like(request):
     # html로 부터 top_id를 받아옴
@@ -382,6 +365,7 @@ def top_choice(request):
     context = {'id':top_id, 'img':img}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
+
 # 하의 결과 선택
 def under_choice(request):
     # html로 부터 top_id를 받아옴
@@ -392,6 +376,7 @@ def under_choice(request):
 
     context = {'id':under_id, 'img':img}
     return HttpResponse(json.dumps(context), content_type="application/json")
+
 
 # 신발 결과 선택
 def shoes_choice(request):
@@ -405,6 +390,7 @@ def shoes_choice(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+# 선택 결과 DB에 저장
 def item_save(request):
     top_id = request.POST.get('top_id', None)
     under_id = request.POST.get('under_id', None)
@@ -439,7 +425,8 @@ def item_save(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
-class My_choice(View):
+# 내 저장 리스트 확인
+class my_choice(View):
     template_name = 'wearwhat/my_choice.html'
 
     # 화면 뿌리기
@@ -470,6 +457,7 @@ class My_choice(View):
             return render(request, 'wearwhat/index.html')
 
 
+# 저장 리스트에서 상의 제거
 def top_remove(request):
     # html로 부터 top_id를 받아옴
     top_id = request.POST.get('top_id', None)
@@ -483,6 +471,7 @@ def top_remove(request):
     return HttpResponse(json.dumps(context), content_type="application/json")
 
 
+# 저장 리스트에서 하의 제거
 def under_remove(request):
     # html로 부터 top_id를 받아옴
     under_id = request.POST.get('under_id', None)
@@ -495,6 +484,8 @@ def under_remove(request):
     context = {'under_id': under_id}
     return HttpResponse(json.dumps(context), content_type="application/json")
 
+
+# 저장 리스트에서 신발 제거
 def shoes_remove(request):
     # html로 부터 top_id를 받아옴
     shoes_id = request.POST.get('shoes_id', None)
@@ -508,6 +499,8 @@ def shoes_remove(request):
 
     return HttpResponse(json.dumps(context), content_type="application/json")
 
+
+# 로그아웃
 def logout(request):
     auth.logout(request)
     return redirect('/')
