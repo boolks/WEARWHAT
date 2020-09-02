@@ -59,8 +59,9 @@ def matplotlib_graph():
     figure, (axes1) = plt.subplots(nrows=1, ncols=1)
     figure.set_size_inches(20, 5)
 
-    sns.countplot(data=total_hash_df, x='hashtag', palette="Set3", ax=axes1,
+    sns.countplot(data=total_hash_df, x='hashtag', palette="gray", ax=axes1,
                   order=total_hash_df['hashtag'].value_counts().head(10).index)
+    sns.despine(left=True, bottom=True)
     # sns.countplot(data=top_hash_df, y='hashtag', palette="Set3", ax=axes1,
     #               order=top_hash_df['hashtag'].value_counts().head(5).index)
     # 경로 <--------저기 보이는 자신의 images 폴더로 넣어야됨
