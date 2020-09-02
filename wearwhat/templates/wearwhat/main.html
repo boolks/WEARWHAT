@@ -27,7 +27,7 @@
                 <b>{% if user.gender == 'W'%}<b>여성{% else %}남성{% endif %}</b><br> <b>{{ user.name }}</b>님을 위한 날씨 기반 추천 목록입니다</h1>
         </div>
         <div class="recommend">
-            <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">옵션 변경</a></button>
+            <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">코디네이션</a></button>
             <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'my_choice' %}">내가 저장한 옷</a></button><br><br>
             <div class="nav_btn">
                 <button type="button" class="random_btn active" style="font-weight: bold"><a href=""></a>오늘의 추천</button>
