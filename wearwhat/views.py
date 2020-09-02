@@ -272,25 +272,11 @@ def get_random_Shoes(request):
     else:
         gender = '여'
 
-    # 현재 온도 >= 23 인 경우
-    if temp >= 24:
-        exclude_list = [17]
-
-    # 23 < 현재 온도 < 27 인 경우
-    elif 17 < temp < 24:
-        exclude_list = [17]
-
-    # 현재 온도 <= 17 인 경우
-    elif temp < 17:
-        exclude_list = [27, 23]
-
     if style == 'ALL':
-        for i in Shoes.objects.exclude(temperature__in=exclude_list). \
-                filter(Q(gender=gender) | Q(gender='남,여')).values_list('id', flat=True):
+        for i in Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여')).values_list('id', flat=True):
             shoes_id_list.append(i)
     else:
-        for i in Shoes.objects.exclude(temperature__in=exclude_list). \
-                filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
+        for i in Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여')).filter(style=style).values_list('id', flat=True):
             shoes_id_list.append(i)
     shoes_random = random.sample(shoes_id_list, 5)
     return shoes_random
@@ -425,6 +411,7 @@ def item_save(request):
     top_id = request.POST.get('top_id', None)
     under_id = request.POST.get('under_id', None)
     shoes_id = request.POST.get('shoes_id', None)
+
     top_item = get_object_or_404(Top, id=top_id)
     under_item = get_object_or_404(Under, id=under_id)
     shoes_item = get_object_or_404(Shoes, id=shoes_id)
