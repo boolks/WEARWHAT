@@ -128,6 +128,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
     <script type="text/javascript">
+        {#상의 좋아요#}
         $('.top_like').click(function(){
             var num = $(this).attr('top_id')
             $.ajax({
@@ -148,6 +149,7 @@
             });
         });
 
+        {#하의 좋아요#}
         $('.under_like').click(function(){
             var num = $(this).attr('under_id')
             $.ajax({
@@ -168,6 +170,7 @@
             });
         });
 
+        {#신발 좋아요#}
         $('.shoes_like').click(function(){
             var num = $(this).attr('shoes_id')
             $.ajax({
@@ -187,6 +190,8 @@
                 }
             });
         });
+
+        {#상의 제거#}
         $('.top_remove').click(function(){
             var top = $(this).attr('top_id')
             $.ajax({
@@ -202,6 +207,8 @@
                 }
             });
         });
+
+        {#하의 제거#}
         $('.under_remove').click(function(){
             var under = $(this).attr('under_id')
             $.ajax({
@@ -217,6 +224,8 @@
                 }
             });
         });
+
+        {#신발 제거#}
         $('.shoes_remove').click(function(){
             var shoes = $(this).attr('shoes_id')
             $.ajax({
