@@ -1,7 +1,7 @@
 {% extends 'wearwhat/base.html' %}
 {% block content %}
     <div class="container-fluid">
-        <div class="page-header">
+        <div class="page-header" id="head">
             <button type="button" id="logout_btn" class="btn btn-outline-secondary" style="margin-right: 15px"><a href="{% url 'logout' %}?next={{ request.path }}">로그아웃</a></button>
             {% if weather == "sun" %}
                 <i class="fas fa-sun"></i>
@@ -30,14 +30,15 @@
             <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'change_option' %}">옵션 변경</a></button>
             <button type="button" class="btn btn-dark btn-lg"><a href="{% url 'my_choice' %}">내가 저장한 옷</a></button><br><br>
             <div class="nav_btn">
-                <h3>Best 5</h3>
-                <button type="button" class="random_btn active"><a href=""></a>오늘의 추천</button>
-                <button type="button" class="week_btn"><a href=""></a>주 간</button>
-                <button type="button" class="month_btn"><a href=""></a>월 간</button>
+                <button type="button" class="random_btn active" style="font-weight: bold"><a href=""></a>오늘의 추천</button>
+                <button type="button" class="week_btn" style="font-weight: bold"><a href=""></a>주 간</button>
+                <button type="button" class="month_btn" style="font-weight: bold"><a href=""></a>월 간</button>
+                <button type="button" class="hashtag_btn" style="font-weight: bold"><a href=""></a>#해시태그</button>
             </div>
 
             <!-- 상의 -->
-            <p class="bestFive" style="opacity:0.7; font-size:30px;text-align: left; margin: 45px 75px 40px; ">오늘의 추천</p>
+            <h1 class="bestFiveTitle" style="opacity:0.7; text-align: left; margin: 45px 75px 40px;"></h1>
+            <p class="bestFive" style="opacity:0.7; font-size:30px;text-align: left; margin-left:75px;">오늘의 추천</p>
             <p class="list_title">　상의</p>
             <div class="top_list">
                 <table>
@@ -346,11 +347,12 @@
                 </table>
             </div>
 
-        <div class="container">
-            해시태그
-            <div>
-                <h3>최신트렌드</h3>
-                <img src="../../static/images/tag_image.png" alt="">
+            <div id="hashtag" style="border-top: solid dimgrey 1px; width: 1500px; height: 1000px; margin-top: 200px; padding: 100px">
+                <h1 style="color: dimgrey">#해시태그</h1>
+                <h4 style="color: dimgrey">최신 트렌드</h4>
+                <img src="../../static/images/tag_image.png" alt="" style="max-width: 100%;">
+                <button type="button" class="back_btn btn btn-dark btn-lg" style="margin-top: 50px">돌아가기</button>
+
             </div>
 {#                <div>#}
 {#                    under#}
@@ -360,10 +362,31 @@
 {#                    shoes#}
 {#                    <img src="../../static/images/shoes_image.png" alt="">#}
 {#                </div>#}
-        </div>
+
         </div>
     </div>
 
+    <script type="text/javascript">
+        // 해시태그 버튼 클릭시 하단으로 스크롤
+        const hashtag = document.querySelector(".hashtag_btn");
+        hashtag.addEventListener("click", () => {
+            scrollIntoView("#hashtag");
+        })
+
+        // 돌아가기 버튼 클릭시 상단으로 스크롤
+        const goBack = document.querySelector(".back_btn");
+        goBack.addEventListener("click", () => {
+            scrollIntoView("#head");
+        })
+
+        // 함수 - 지정한 위치로 스크롤
+        function scrollIntoView(selector) {
+        const scrollTo = document.querySelector(selector);
+        scrollTo.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+
+    </script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
     {#    상의 스크립트#}
@@ -440,14 +463,17 @@
             $('.monthly_under_list').hide();
             $('.monthly_shoes_list').hide();
 
+            $('.bestFiveTitle').hide();
             $('.weekly_top_list').hide();
             $('.weekly_under_list').hide();
             $('.weekly_shoes_list').hide();
         });
 
         $('.week_btn').click(function(){
+            $('.bestFiveTitle').text('Best5');
             $('.bestFive').text('{{ last_week }} ~ {{ week }}동안 가장 많은 좋아요를 받은 옷');
 
+            $('.bestFiveTitle').show();
             $('.weekly_top_list').show();
             $('.weekly_under_list').show();
             $('.weekly_shoes_list').show();
@@ -462,11 +488,13 @@
         });
 
         $('.month_btn').click(function(){
-            $('.bestFive').text('한 달 동안 가장 많은 좋아요를 받은 옷');
+            $('.bestFiveTitle').text('Best5');
+            $('.bestFive').text('{{ last_month }} ~ {{ month }}동안 가장 많은 좋아요를 받은 옷');
             $('.monthly_top_list').show();
             $('.monthly_under_list').show();
             $('.monthly_shoes_list').show();
 
+            $('.bestFiveTitle').show();
             $('.weekly_top_list').hide();
             $('.weekly_under_list').hide();
             $('.weekly_shoes_list').hide();

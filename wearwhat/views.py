@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
-from .matplotlib import matplotlib_graph
+# from .matplotlib import matplotlib_graph
 
 import random
 import json
@@ -90,7 +90,7 @@ class SignUp(generic.CreateView):
 class Main_page(View):
     template_name = 'wearwhat/main.html'
 
-    matplotlib_graph()
+    # matplotlib_graph()
 
     # 화면 뿌리기
     def get(self, request):
@@ -106,14 +106,16 @@ class Main_page(View):
                 gender = '여'
 
             now = datetime.datetime.now()
-            week = now + datetime.timedelta(weeks=1)
+            week = now + datetime.timedelta(weeks=0)
             week = datetime.date(week.year, week.month, week.day)
             last_week = now + datetime.timedelta(weeks=-1)
             last_week = datetime.date(last_week.year, last_week.month, last_week.day)
             month = now + relativedelta(months=0)
             month = datetime.date(month.year, month.month, month.day)
-            next_month = now + relativedelta(months=1)
-            next_month = datetime.date(next_month.year, next_month.month, next_month.day)
+            last_month = now + relativedelta(months=-1)
+            last_month = datetime.date(last_month.year, last_month.month, last_month.day)
+
+            print(week, last_week)
 
             # 주간 옷 top 5
             weekly_cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
@@ -128,13 +130,13 @@ class Main_page(View):
 
             # 월간 옷 top 5
             monthly_cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            .filter(Q(toplikes__likedate__gte=month)&Q(toplikes__likedate__lte=next_month))\
+            .filter(Q(toplikes__likedate__lte=month)&Q(toplikes__likedate__gte=last_month))\
             .annotate(count=Count('top_like_users')).order_by('-count')[:5]
             monthly_cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            .filter(Q(underlikes__likedate__gte=month)&Q(underlikes__likedate__lte=next_month))\
+            .filter(Q(underlikes__likedate__lte=month)&Q(underlikes__likedate__gte=last_month))\
             .annotate(count=Count('under_like_users')).order_by('-count')[:5]
             monthly_cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            .filter(Q(shoeslikes__likedate__gte=month)&Q(shoeslikes__likedate__lte=next_month))\
+            .filter(Q(shoeslikes__likedate__lte=month)&Q(shoeslikes__likedate__gte=last_month))\
             .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
 
             # 옷 랜덤 5개 출력
@@ -146,7 +148,7 @@ class Main_page(View):
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes,\
                            'weekly_top':weekly_cloth_top, 'weekly_under':weekly_cloth_under, 'weekly_shoes':weekly_cloth_shoes,\
                            'monthly_top':monthly_cloth_top, 'monthly_under':monthly_cloth_under, 'monthly_shoes':monthly_cloth_shoes,\
-                           'week':week, 'last_week':last_week, 'month':month, 'next_month':next_month,\
+                           'week':week, 'last_week':last_week, 'month':month, 'last_month':last_month,\
                            'temp': temp, 'weather': weather})
         else:
             return render(request, 'wearwhat/index.html')
@@ -271,7 +273,7 @@ def get_random_Shoes(request):
 
     # 현재 온도 >= 23 인 경우
     if temp >= 24:
-        exclude_list = [17, 20]
+        exclude_list = [17]
 
     # 23 < 현재 온도 < 27 인 경우
     elif 17 < temp < 24:
