@@ -106,15 +106,14 @@ class Main_page(View):
             else:
                 gender = '여'
 
-            now = datetime.datetime.now()
-            week = now + datetime.timedelta(weeks=0)
+            week = datetime.datetime.today() - datetime.timedelta(days=datetime.datetime.today().isoweekday() % 7)
             week = datetime.date(week.year, week.month, week.day)
-            last_week = now + datetime.timedelta(weeks=-1)
+            last_week = datetime.datetime.today() - datetime.timedelta(days=datetime.datetime.today().isoweekday() % 7-1) - datetime.timedelta(weeks=1)
             last_week = datetime.date(last_week.year, last_week.month, last_week.day)
-            month = now + relativedelta(months=0)
-            month = datetime.date(month.year, month.month, month.day)
-            last_month = now + relativedelta(months=-1)
+            last_month = datetime.datetime.today().replace(day=1) - datetime.timedelta(days=1)
             last_month = datetime.date(last_month.year, last_month.month, last_month.day)
+            first_month = last_month.replace(day=1)
+            first_month = datetime.date(first_month.year, first_month.month, first_month.day)
 
             print(week, last_week)
 
@@ -131,13 +130,13 @@ class Main_page(View):
 
             # 월간 옷 top 5
             monthly_cloth_top = Top.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            .filter(Q(toplikes__likedate__lte=month)&Q(toplikes__likedate__gte=last_month))\
+            .filter(Q(toplikes__likedate__gte=first_month)&Q(toplikes__likedate__lte=last_month))\
             .annotate(count=Count('top_like_users')).order_by('-count')[:5]
             monthly_cloth_under = Under.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            .filter(Q(underlikes__likedate__lte=month)&Q(underlikes__likedate__gte=last_month))\
+            .filter(Q(underlikes__likedate__gte=first_month)&Q(underlikes__likedate__lte=last_month))\
             .annotate(count=Count('under_like_users')).order_by('-count')[:5]
             monthly_cloth_shoes = Shoes.objects.filter(Q(gender=gender) | Q(gender='남,여'))\
-            .filter(Q(shoeslikes__likedate__lte=month)&Q(shoeslikes__likedate__gte=last_month))\
+            .filter(Q(shoeslikes__likedate__gte=first_month)&Q(shoeslikes__likedate__lte=last_month))\
             .annotate(count=Count('shoes_like_users')).order_by('-count')[:5]
 
             # 옷 랜덤 5개 출력
@@ -149,7 +148,7 @@ class Main_page(View):
                           {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes,\
                            'weekly_top':weekly_cloth_top, 'weekly_under':weekly_cloth_under, 'weekly_shoes':weekly_cloth_shoes,\
                            'monthly_top':monthly_cloth_top, 'monthly_under':monthly_cloth_under, 'monthly_shoes':monthly_cloth_shoes,\
-                           'week':week, 'last_week':last_week, 'month':month, 'last_month':last_month,\
+                           'week':week, 'last_week':last_week, 'first_month':first_month, 'last_month':last_month,\
                            'temp': temp, 'weather': weather})
         else:
             return render(request, 'wearwhat/index.html')
@@ -347,7 +346,7 @@ class SelectOptions(Main_page):
                       {'top': cloth_top, 'under': cloth_under, 'shoes': cloth_shoes, 'form': form})
 
 
-# 추천 받는 메소드 구현중 위에거랑 합치든 해야댐
+# 추천 받는 메소드
 def recommend(request):
     current_user = request.user
     template_name = 'wearwhat/recommend_result.html'
@@ -357,7 +356,6 @@ def recommend(request):
         if form.is_valid():
             fav_style_change = form.cleaned_data['fav_style_change']
             for_where = form.cleaned_data['for_where']
-            print('=====================', fav_style_change, for_where)
             if for_where == 'SCHOOL':
                 current_user.fav_style = 'CASUAL'
             elif for_where == 'WORK':
