@@ -1,21 +1,50 @@
-{% extends 'wearwhat/base.html' %}
+<!DOCTYPE html>
+{% load static %}
 
-{% block content %}
-    <div class="container-login100" style="">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/images/favicon.ico" sizes="32x32"/>
+    <title>오늘뭐입지</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- 개발자 정의 CSS -->
+    <link rel="stylesheet" href="{% static 'css/registration_style.css' %}">
+
+</head>
+
+<body>
+    <div class="container-login100">
         <div class="card" style="margin:auto;width: 900px">
             <div class="card-header">
             <b>회원가입</b>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="text-align: center">
                 {% if form.errors %}
-                    <p xmlns="http://www.w3.org/1999/html">양식에 맞게 작성해주세요.</p>
+                    <p xmlns="http://www.w3.org/1999/html"><span style="color: indianred; font-weight: bold">
+                        <span style="font-size: 30px;">양식에 맞게 작성해주세요.</span><br>
+                    비밀번호가 너무 짧습니다.(문자 포함 최소 8자)<br>
+                        혹은 비밀번호가 너무 일상적인 단어입니다.</span></p>
                 {% endif %}
                 <form method="post" action="{% url 'join' %}">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-warning" type="submit" style="color: white;margin-left: 370px">가입하기</button>
+                    <table>
+                        {% for field in form %}
+                        <tr>
+                            <td>
+                                {{ field.label }}
+                            </td>
+                            <td>
+                            <td style="text-align: left">
+                                {{ field }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <button class="btn btn-warning" type="submit" style="color: white; margin-top:15px;">가입하기</button>
                 </form>
             </div>
         </div>
     </div>
-{% endblock %}
+</body>
+</html>

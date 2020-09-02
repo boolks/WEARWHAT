@@ -35,6 +35,12 @@ class CustomUserCreationForm(UserCreationForm):
             'username': '아이디',
             'name': '이름'
         }
+        help_texts = {
+            'username': None,
+            'password1': None,
+            'password2': None,
+        }
+
 
 
 # admin page 정보수정 폼

@@ -1,14 +1,35 @@
-body{
-    background-image: url("../images/backgrounds/background.jpg");
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    background-position: center center;
-    background-size: auto;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
+.container-login100 {
+  width: 100%;
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+
+  background-color: #ebebeb;
 }
+
+.form-group ul {
+    display: none;
+}
+
+.helptext {
+    display: none;
+}
+table{
+    margin: auto;
+}
+td {
+    text-align: right;
+    padding: 0px 10px 15px 0px;
+    font-size: 20px;
+}
+
 
 ::-webkit-scrollbar { width: 5.2px; height: 6.2px } /* 스크롤 바 */
 
