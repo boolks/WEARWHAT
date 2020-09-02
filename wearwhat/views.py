@@ -89,6 +89,9 @@ class SignUp(generic.CreateView):
 # 옷 추천 메인페이지
 class Main_page(View):
     template_name = 'wearwhat/main.html'
+
+    matplotlib_graph()
+
     # 화면 뿌리기
     def get(self, request):
         current_user = request.user
