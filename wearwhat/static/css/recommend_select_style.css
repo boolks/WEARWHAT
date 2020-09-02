@@ -41,7 +41,7 @@ body, html{
 
 }
 .bg{
-    background-image: url("../images/select_background.jpg");
+    background-image: url("../images/backgrounds/select_background.jpg");
     height: 100%;
     background-repeat: no-repeat;
     background-position: center center;
