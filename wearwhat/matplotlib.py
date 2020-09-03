@@ -62,6 +62,8 @@ def matplotlib_graph():
     sns.countplot(data=total_hash_df, x='hashtag', palette="gray", ax=axes1,
                   order=total_hash_df['hashtag'].value_counts().head(10).index)
     sns.despine(left=True, bottom=True)
+    plt.xlabel('')
+    plt.ylabel('')
     # sns.countplot(data=top_hash_df, y='hashtag', palette="Set3", ax=axes1,
     #               order=top_hash_df['hashtag'].value_counts().head(5).index)
     # 경로 <--------저기 보이는 자신의 images 폴더로 넣어야됨
