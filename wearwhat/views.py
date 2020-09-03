@@ -11,7 +11,7 @@ from django.contrib import auth
 
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
-# from .matplotlib import matplotlib_graph
+from .matplotlib import matplotlib_graph
 
 import random
 import json
@@ -83,6 +83,7 @@ class SignUp(generic.CreateView):
 class Main_page(View):
 
     template_name = 'wearwhat/main.html'
+
     # matplotlib_graph()
 
     # 화면 뿌리기
