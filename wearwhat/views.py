@@ -218,7 +218,7 @@ def get_random_Under(request):
 
     # 현재 온도 >= 23 인 경우
     if temp >= 24:
-        exclude_list = [17, 20]
+        exclude_list = [17]
 
     # 23 < 현재 온도 < 27 인 경우
     elif 17 < temp < 24:
