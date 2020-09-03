@@ -46,6 +46,12 @@ for url in url_list:  # 0: 상의, 1: 하의:, 2:스커트, 3:원피스, 4:신�
             cloth_dict['id'] = total
         else:
             cloth_dict['id'] = index
+        
+        # 인덱스 번호가 아닌 옷의 고유 id를 찾아 저장하는 방법 -> 여러 페이지에서 스크랩할 땐 겹칠 수 있어서 불리
+        # matched = re.search(r'\d+[^/0]', cloth)
+        # cloth_id = int(matched.group())
+        # cloth_dict['id'] = cloth_id
+        
         # 옷 이름 파싱
         title = d_bs.select('div.right_contents span.product_title > span')[-1].text
         cloth_dict['title'] = title
