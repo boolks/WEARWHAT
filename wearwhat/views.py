@@ -84,6 +84,7 @@ class Main_page(View):
 
     template_name = 'wearwhat/main.html'
 
+    # 최초 1회 필요
     # matplotlib_graph()
 
     # 화면 뿌리기
@@ -179,7 +180,7 @@ def get_random_Top(request):
     if temp >= 24:
         exclude_list = [17, 20]
 
-    # 23 < 현재 온도 < 27 인 경우 얇은긴팔ㅇㅋ
+    # 23 < 현재 온도 < 27 인 경우 얇은긴팔
     elif 17 < temp < 24:
         exclude_list = [17]
 
