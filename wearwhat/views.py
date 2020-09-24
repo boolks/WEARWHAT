@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
 from django.contrib import auth
-
+from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes
 from .matplotlib import matplotlib_graph
@@ -53,17 +53,17 @@ def index_view(request):
 
 
 # 로그인
-def login(request):
+def user_login(request):
     if request.method == 'POST':
         # post 요청이 들어온다면
         # print('유저네임', request.POST['username'])
         username = request.POST['username']
         password = request.POST['pass']
-        user = auth.authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
         # 입력받은 아이디와 비밀번호가 데이터베이스에 존재하는지 확인.
         if user is not None:
             # 데이터 베이스에 회원정보가 존재한다면 로그인 시키고 home으로 돌아가기.
-            auth.login(request, user)
+            login(request, user)
             return HttpResponseRedirect(reverse('main_page'))
         else:
             # 회원정보가 존재하지 않는다면, 에러인자와 함께 login 템플릿으로 돌아가기.
