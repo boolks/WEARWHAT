@@ -36,6 +36,7 @@ temp, weather = get_temperature()
 weather = weather.lower()
 
 
+
 # 로그인 전 메인페이지
 def index_view(request):
     # DB 옷 데이터 개수
