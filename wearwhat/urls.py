@@ -7,7 +7,7 @@ urlpatterns = [
     # localhost:8000/
     path('', views.index_view, name='index_page'),
     path('main', views.Main_page.as_view(), name='main_page'),
-    path('login', views.login, name='login'),
+    path('login', views.user_login, name='login'),
 
     # 위 경로와 같은데 값을 ajax 상에서 POST로 보내줌
     path('top_like', views.top_like, name='top_like'),
