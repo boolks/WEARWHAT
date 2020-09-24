@@ -94,16 +94,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'cloth_db',
-	'CLIENT': {
-		'host': 'mongo',
-		'port': 27017,
-		'username':'root',
-		'password':'root'
-	}
-        # 'USER': 'root',  # 데이터베이스 계정
-        # 'PASSWORD': 'root',  # 계정 비밀번호
-        # 'HOST': 'localhost',  # 데이테베이스 주소(IP)
-        # 'PORT': '27017',  # 데이터베이스 포트(보통은 27017)
+        'CLIENT': {
+            'host': 'mongo',
+            'port': 27017,
+            'username':'root',
+            'password':'root'
+        }
+    #     'USER': 'root',  # 데이터베이스 계정
+    #     'PASSWORD': 'root',  # 계정 비밀번호
+    #     'HOST': 'localhost',  # 데이테베이스 주소(IP)
+    #     'PORT': '27017',  # 데이터베이스 포트(보통은 27017)
     }
     # 'default': {
     #     'ENGINE': 'djongo',
