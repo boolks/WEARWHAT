@@ -8,10 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.db.models import Count
 from django.contrib import auth
-<<<<<<< HEAD
 from django.contrib.auth import authenticate, login
-=======
->>>>>>> 5e5e06b1dc33f5e70f0c317e2c5ee0adb3726919
 from .forms import CustomUserCreationForm, ChangeOptionForm
 from .models import Top, Under, Shoes, CustomUser
 from .matplotlib import matplotlib_graph
