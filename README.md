@@ -94,27 +94,61 @@
 
 ![image](https://user-images.githubusercontent.com/59273807/103452868-5a546900-4d17-11eb-9c7e-5a4f87b3e148.png)
 
+
+
+##### OpenWeather API를 이용하여 실시간 기온 정보에 따라 옷과 신발 데이터를 필터링하여 화면에 표시
+
+
+
 ------
 
+
+
 ![image](https://user-images.githubusercontent.com/59273807/103452876-693b1b80-4d17-11eb-986e-4d6ed758612e.png)
+
+
+
+##### 주간, 월간별 좋아요를 많이 받은 순으로 데이터를 필터링하여 화면에 표시
+
+
 
 ------
 
 ![image](https://user-images.githubusercontent.com/59273807/103452887-79eb9180-4d17-11eb-8832-59b95628e24c.png)
 
+##### 최신 트렌드 분석을 위한 의류 데이터에 포함되어 있는 “해시태그” 데이터 시각화
+
+
+
 ------
 
+
+
 ![image](https://user-images.githubusercontent.com/59273807/103452890-87a11700-4d17-11eb-80d3-6e82f9471d5b.png)
+
+
+
+##### 메인 화면의 “코디네이션” 버튼 클릭 시 원하는 스타일과 어떤 장소에서의 옷을 추천받을지 선택
+
+
 
 ------
 
 ![image](https://user-images.githubusercontent.com/59273807/103452893-925bac00-4d17-11eb-980e-775e88d29881.png)
+
+
+
+##### "코디네이션"을 통해 추천받은 목록에서 마음에 드는 상의, 하의, 신발을 조합하여 저장
+
+
 
 ------
 
 ![image](https://user-images.githubusercontent.com/59273807/103452896-9c7daa80-4d17-11eb-911d-ac450abc7767.png)
 
 
+
+##### 메인 화면의 “내가 저장한 옷” 버튼 클릭 시 코디네이션에서 저장한 옷을 조회/삭제
 
 
 
